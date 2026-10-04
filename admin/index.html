@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Admin — Infinity Stream TV</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg:          #07040f;
+    --surface:     #0e0a1a;
+    --surface2:    #160f28;
+    --border:      rgba(255,255,255,0.07);
+    --accent:      #b565ff;
+    --accent-dim:  rgba(181,101,255,0.12);
+    --accent-glow: rgba(181,101,255,0.25);
+    --text:        #f0eafa;
+    --muted:       rgba(240,234,250,0.45);
+    --danger:      #ff5e5e;
+    --success:     #4ade80;
+    --warning:     #facc15;
+    --radius:      12px;
+    --radius-sm:   8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── LOGIN ── */
+  .login-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 24px;
+  }
+  .login-screen.hidden { display: none; }
+
+  .login-box {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,94,94,0.1);
+    border: 1px solid rgba(255,94,94,0.2);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ff8080;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .login-brand {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .login-brand span { color: var(--accent); }
+  .login-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .login-card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .login-card h2 { font-size: 15px; font-weight: 600; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 500; color: var(--muted); }
+  .field input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .field input::placeholder { color: var(--muted); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 11px;
+    background: linear-gradient(90deg, #8a35cc, var(--accent));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s, transform .1s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.45; cursor: default; }
+
+  .erro-box {
+    font-size: 12px;
+    color: #ff6b6b;
+    background: rgba(255,94,94,0.08);
+    border: 1px solid rgba(255,94,94,0.2);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    display: none;
+  }
+  .erro-box.visible { display: block; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .topbar-brand span { color: var(--accent); }
+  .admin-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,94,94,0.12);
+    color: #ff8080;
+    border: 1px solid rgba(255,94,94,0.2);
+    border-radius: 20px;
+    padding: 2px 10px;
+    letter-spacing: 0.04em;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-sair {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color .2s, border-color .2s;
+  }
+  .btn-sair:hover { color: var(--danger); border-color: rgba(255,94,94,0.3); }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    overflow: auto;
+    padding: 32px;
+  }
+  .page-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── STATS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .stat-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-sub { font-size: 12px; color: var(--muted); }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .section-title { font-size: 16px; font-weight: 600; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .btn-novo {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s;
+  }
+  .btn-novo:hover { opacity: 0.88; }
+
+  /* ── FORM INLINE ── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 18px;
+    display: none;
+  }
+  .form-card.visible { display: block; }
+  .form-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .btn-fechar {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px 6px;
+    transition: color .2s;
+  }
+  .btn-fechar:hover { color: var(--text); }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .form-field { display: flex; flex-direction: column; gap: 6px; }
+  .form-field label { font-size: 12px; font-weight: 500; color: var(--muted); }
+  .form-field input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
+  }
+  .form-field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .form-field input::placeholder { color: var(--muted); }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .btn-cancelar {
+    padding: 9px 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color .2s, border-color .2s;
+  }
+  .btn-cancelar:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .btn-salvar {
+    padding: 9px 20px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s;
+  }
+  .btn-salvar:hover { opacity: 0.88; }
+  .btn-salvar:disabled { opacity: 0.45; cursor: default; }
+
+  /* ── TABELA ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); }
+  th {
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  td { padding: 14px 20px; font-size: 13px; border-top: 1px solid var(--border); }
+  tbody tr { transition: background .15s; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-ativo { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+  .badge-inativo { background: rgba(255,94,94,0.1); color: #ff5e5e; border: 1px solid rgba(255,94,94,0.2); }
+
+  .actions { display: flex; align-items: center; gap: 6px; }
+  .btn-action {
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color .2s, border-color .2s;
+  }
+  .btn-action:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .btn-action.danger:hover { color: var(--danger); border-color: rgba(255,94,94,0.3); }
+
+  /* busca */
+  .busca-wrap { position: relative; margin-bottom: 14px; }
+  .busca-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: .4; pointer-events: none; }
+  .busca-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px 10px 36px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .busca-wrap input:focus { border-color: var(--accent); }
+
+  /* empty */
+  .empty-row td {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid rgba(74,222,128,0.3);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--success);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(181,101,255,0.2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-badge">🔐 Acesso restrito</div>
+    <div class="login-brand">Infinity Stream <span>TV</span></div>
+    <div class="login-sub">Painel Administrativo</div>
+
+    <div class="login-card">
+      <h2>Entrar como administrador</h2>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="l-email" placeholder="admin@infinitystreamtv.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" id="l-senha" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <div class="erro-box" id="l-erro"></div>
+      <button class="btn-primary" id="btn-login">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar" id="topbar" style="display:none;">
+  <div class="topbar-brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    Infinity Stream <span>TV</span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-sair" id="btn-sair">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main" style="display:none;">
+  <div class="page-inner">
+
+    <!-- Stats -->
+    <div style="margin-bottom:28px;">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Painel Admin</h2>
+      <p style="font-size:13px;color:var(--muted);">Gerencie todos os revendedores da plataforma.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Revendedores ativos</span>
+          <div class="stat-icon" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.15);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+        <div class="stat-value" id="stat-ativos">—</div>
+        <div class="stat-sub">de <span id="stat-total">—</span> cadastrados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Total de clientes</span>
+          <div class="stat-icon" style="background:rgba(181,101,255,0.1);border:1px solid rgba(181,101,255,0.15);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div class="stat-value" id="stat-clientes">—</div>
+        <div class="stat-sub">em toda a plataforma</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Novos este mês</span>
+          <div class="stat-icon" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.15);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+        </div>
+        <div class="stat-value" id="stat-novos">—</div>
+        <div class="stat-sub" id="stat-novos-sub">revendedores</div>
+      </div>
+    </div>
+
+    <!-- Revendedores -->
+    <div class="section-header">
+      <div>
+        <div class="section-title">Revendedores</div>
+        <div class="section-sub" id="rev-count">Carregando…</div>
+      </div>
+      <button class="btn-novo" id="btn-novo-rev">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo revendedor
+      </button>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card" id="form-card">
+      <div class="form-title">
+        <span id="form-titulo">Novo revendedor</span>
+        <button class="btn-fechar" id="btn-fechar-form">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Nome da marca</label>
+          <input type="text" id="f-nome" placeholder="Ex: Stream Plus"/>
+        </div>
+        <div class="form-field">
+          <label>Slug (URL)</label>
+          <input type="text" id="f-slug" placeholder="Ex: stream-plus"/>
+        </div>
+        <div class="form-field">
+          <label>E-mail do gestor</label>
+          <input type="email" id="f-email" placeholder="gestor@suamarca.com"/>
+        </div>
+        <div class="form-field">
+          <label>Senha</label>
+          <input type="text" id="f-senha" placeholder="Senha de acesso"/>
+        </div>
+        <div class="form-field">
+          <label>WhatsApp de suporte</label>
+          <input type="text" id="f-suporte" placeholder="https://wa.me/55119..."/>
+        </div>
+        <div class="form-field">
+          <label>Tagline (opcional)</label>
+          <input type="text" id="f-tagline" placeholder="Ex: Entretenimento sem limites"/>
+        </div>
+      </div>
+      <div class="erro-box" id="f-erro" style="margin-bottom:12px;"></div>
+      <div class="form-actions">
+        <button class="btn-cancelar" id="btn-cancelar-form">Cancelar</button>
+        <button class="btn-salvar" id="btn-salvar-rev">Salvar</button>
+      </div>
+    </div>
+
+    <!-- Busca -->
+    <div class="busca-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="busca-rev" placeholder="Buscar por nome ou slug…"/>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Marca</th>
+            <th>Slug / URL</th>
+            <th>E-mail</th>
+            <th>Clientes</th>
+            <th>Status</th>
+            <th style="text-align:right;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="rev-tbody">
+          <tr class="empty-row"><td colspan="6"><div class="empty-icon">⏳</div>Carregando…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ <span id="toast-msg"></span></div>
+
+<script>
+(function(){
+
+  // ── CONFIG ──
+  const SUPABASE_URL = 'https://hxptaygjtvyyteyqlpeb.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4cHRheWdqdHZ5eXRleXFscGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNzAxNjEsImV4cCI6MjEwNjY0NjE2MX0.dYAIcixEYEUuxfeFUmoOqTNX0MoO17yKfEdz6K4wZL0';
+
+  // Credenciais do admin (fixas — só você tem acesso)
+  const ADMIN_EMAIL = 'admin@infinitystreamtv.com';
+  const ADMIN_SENHA = 'admin@infinity2026';
+
+  async function sbFetch(path, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || 'return=representation',
+        ...(options.headers || {})
+      },
+      ...options
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  // ── HELPERS ──
+  function showToast(msg, erro) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.style.borderColor = erro ? 'rgba(255,94,94,0.3)' : 'rgba(74,222,128,0.3)';
+    t.style.color = erro ? '#ff6b6b' : 'var(--success)';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function slugify(str) {
+    return str.toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .slice(0, 40);
+  }
+
+  // ── AUTH ──
+  document.getElementById('btn-login').addEventListener('click', fazerLogin);
+  ['l-email','l-senha'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') fazerLogin();
+    });
+  });
+
+  function fazerLogin() {
+    const email = document.getElementById('l-email').value.trim().toLowerCase();
+    const senha = document.getElementById('l-senha').value;
+    const erroEl = document.getElementById('l-erro');
+
+    if (email !== ADMIN_EMAIL || senha !== ADMIN_SENHA) {
+      erroEl.textContent = 'Credenciais incorretas.';
+      erroEl.classList.add('visible');
+      return;
+    }
+
+    sessionStorage.setItem('admin_session', '1');
+    mostrarAdmin();
+  }
+
+  function mostrarAdmin() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('topbar').style.display = '';
+    document.getElementById('main').style.display = '';
+    carregarDados();
+  }
+
+  document.getElementById('btn-sair').addEventListener('click', () => {
+    if (confirm('Sair do painel admin?')) {
+      sessionStorage.removeItem('admin_session');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('topbar').style.display = 'none';
+      document.getElementById('main').style.display = 'none';
+      document.getElementById('l-email').value = '';
+      document.getElementById('l-senha').value = '';
+    }
+  });
+
+  // ── DADOS ──
+  let todosRevs = [];
+  let editandoId = null;
+
+  async function carregarDados() {
+    try {
+      const [revs, clientes] = await Promise.all([
+        sbFetch('revendedores?order=criado_em.desc'),
+        sbFetch('clientes?select=id,revendedor_id,ativo')
+      ]);
+
+      todosRevs = revs || [];
+      const clientesData = clientes || [];
+
+      // stats
+      const ativos = todosRevs.filter(r => r.ativo).length;
+      const agora = new Date();
+      const novos = todosRevs.filter(r => {
+        const d = new Date(r.criado_em);
+        return d.getMonth() === agora.getMonth() && d.getFullYear() === agora.getFullYear();
+      }).length;
+
+      document.getElementById('stat-ativos').textContent  = ativos;
+      document.getElementById('stat-total').textContent   = todosRevs.length;
+      document.getElementById('stat-clientes').textContent = clientesData.length;
+      document.getElementById('stat-novos').textContent   = novos;
+      document.getElementById('rev-count').textContent    = `${todosRevs.length} revendedor${todosRevs.length !== 1 ? 'es' : ''} cadastrado${todosRevs.length !== 1 ? 's' : ''}`;
+
+      renderTabela(todosRevs, clientesData);
+    } catch(err) {
+      showToast('Erro ao carregar: ' + err.message, true);
+    }
+  }
+
+  function renderTabela(lista, clientesData) {
+    const tbody = document.getElementById('rev-tbody');
+    if (!lista || lista.length === 0) {
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="6"><div class="empty-icon">🏪</div>Nenhum revendedor ainda.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = lista.map(r => {
+      const qtdClientes = clientesData
+        ? clientesData.filter(c => c.revendedor_id === r.id).length
+        : '—';
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:600;">${r.nome_marca}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">${r.tagline || ''}</div>
+          </td>
+          <td>
+            <code style="font-size:12px;background:var(--surface2);padding:2px 8px;border-radius:5px;color:var(--accent);">${r.slug}</code>
+          </td>
+          <td style="color:var(--muted);">${r.email || '—'}</td>
+          <td style="text-align:center;">${qtdClientes}</td>
+          <td>
+            <span class="badge ${r.ativo ? 'badge-ativo' : 'badge-inativo'}">
+              ${r.ativo ? 'Ativo' : 'Inativo'}
+            </span>
+          </td>
+          <td>
+            <div class="actions" style="justify-content:flex-end;">
+              <button class="btn-action" onclick="editarRev('${r.id}')">Editar</button>
+              <button class="btn-action ${r.ativo ? 'danger' : ''}" onclick="toggleRev('${r.id}', ${r.ativo})">
+                ${r.ativo ? 'Desativar' : 'Ativar'}
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // busca
+  document.getElementById('busca-rev').addEventListener('input', function(){
+    const q = this.value.toLowerCase();
+    const filtrado = todosRevs.filter(r =>
+      r.nome_marca.toLowerCase().includes(q) ||
+      r.slug.toLowerCase().includes(q) ||
+      (r.email || '').toLowerCase().includes(q)
+    );
+    renderTabela(filtrado, null);
+  });
+
+  // ── FORM ──
+  document.getElementById('btn-novo-rev').addEventListener('click', () => {
+    editandoId = null;
+    limparForm();
+    document.getElementById('form-titulo').textContent = 'Novo revendedor';
+    document.getElementById('form-card').classList.add('visible');
+    document.getElementById('f-nome').focus();
+  });
+
+  document.getElementById('btn-fechar-form').addEventListener('click', fecharForm);
+  document.getElementById('btn-cancelar-form').addEventListener('click', fecharForm);
+
+  function fecharForm() {
+    document.getElementById('form-card').classList.remove('visible');
+    limparForm();
+    editandoId = null;
+  }
+
+  function limparForm() {
+    ['f-nome','f-slug','f-email','f-senha','f-suporte','f-tagline'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f-erro').classList.remove('visible');
+    document.getElementById('f-erro').textContent = '';
+  }
+
+  // auto-slug ao digitar nome
+  document.getElementById('f-nome').addEventListener('input', function(){
+    if (!editandoId) {
+      document.getElementById('f-slug').value = slugify(this.value);
+    }
+  });
+
+  document.getElementById('btn-salvar-rev').addEventListener('click', salvarRev);
+
+  async function salvarRev() {
+    const nome    = document.getElementById('f-nome').value.trim();
+    const slug    = document.getElementById('f-slug').value.trim();
+    const email   = document.getElementById('f-email').value.trim().toLowerCase();
+    const senha   = document.getElementById('f-senha').value.trim();
+    const suporte = document.getElementById('f-suporte').value.trim();
+    const tagline = document.getElementById('f-tagline').value.trim();
+    const erroEl  = document.getElementById('f-erro');
+    const btn     = document.getElementById('btn-salvar-rev');
+
+    if (!nome || !slug) {
+      erroEl.textContent = 'Nome e slug são obrigatórios.';
+      erroEl.classList.add('visible');
+      return;
+    }
+    if (!editandoId && (!email || !senha)) {
+      erroEl.textContent = 'E-mail e senha são obrigatórios.';
+      erroEl.classList.add('visible');
+      return;
+    }
+
+    erroEl.classList.remove('visible');
+    btn.disabled = true;
+    btn.textContent = 'Salvando…';
+
+    try {
+      const payload = { nome_marca: nome, slug, tagline, suporte_url: suporte };
+      if (email) payload.email = email;
+      if (senha) payload.senha = senha;
+
+      if (editandoId) {
+        await sbFetch(`revendedores?id=eq.${editandoId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+        showToast('Revendedor atualizado');
+      } else {
+        payload.ativo = true;
+        await sbFetch('revendedores', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        showToast('Revendedor criado com sucesso');
+      }
+
+      fecharForm();
+      carregarDados();
+    } catch(err) {
+      erroEl.textContent = err.message.includes('unique')
+        ? 'Slug ou e-mail já em uso.'
+        : err.message;
+      erroEl.classList.add('visible');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Salvar';
+    }
+  }
+
+  // editar
+  window.editarRev = function(id) {
+    const r = todosRevs.find(x => x.id === id);
+    if (!r) return;
+    editandoId = id;
+    document.getElementById('f-nome').value    = r.nome_marca || '';
+    document.getElementById('f-slug').value    = r.slug || '';
+    document.getElementById('f-email').value   = r.email || '';
+    document.getElementById('f-senha').value   = '';
+    document.getElementById('f-suporte').value = r.suporte_url || '';
+    document.getElementById('f-tagline').value = r.tagline || '';
+    document.getElementById('form-titulo').textContent = 'Editar revendedor';
+    document.getElementById('form-card').classList.add('visible');
+    document.getElementById('f-nome').focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // ativar/desativar
+  window.toggleRev = async function(id, ativo) {
+    try {
+      await sbFetch(`revendedores?id=eq.${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ ativo: !ativo })
+      });
+      showToast(ativo ? 'Revendedor desativado' : 'Revendedor ativado');
+      carregarDados();
+    } catch(err) {
+      showToast('Erro: ' + err.message, true);
+    }
+  };
+
+  // ── INIT ──
+  if (sessionStorage.getItem('admin_session')) {
+    mostrarAdmin();
+  }
+
+})();
+</script>
+</body>
+</html>

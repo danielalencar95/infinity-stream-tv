@@ -38,440 +38,378 @@
 
   /* ── LOGIN ── */
   .login-screen {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    padding: 24px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; padding: 24px;
   }
   .login-screen.hidden { display: none; }
-
-  .login-box {
-    width: 100%;
-    max-width: 360px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
+  .login-box { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; }
   .login-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,94,94,0.1);
-    border: 1px solid rgba(255,94,94,0.2);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #ff8080;
-    margin-bottom: 20px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,94,94,0.1); border: 1px solid rgba(255,94,94,0.2);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; font-weight: 600; color: #ff8080;
+    margin-bottom: 20px; letter-spacing: .05em; text-transform: uppercase;
   }
-
-  .login-brand {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    text-align: center;
-  }
+  .login-brand { font-size: 20px; font-weight: 700; margin-bottom: 4px; text-align: center; }
   .login-brand span { color: var(--accent); }
-  .login-sub {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 28px;
-    text-align: center;
-  }
-
+  .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; text-align: center; }
   .login-card {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    display: flex; flex-direction: column; gap: 14px;
   }
   .login-card h2 { font-size: 15px; font-weight: 600; }
-
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field label { font-size: 12px; font-weight: 500; color: var(--muted); }
   .field input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    font-size: 14px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-    width: 100%;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px;
+    font-size: 14px; color: var(--text); font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color .2s, box-shadow .2s; width: 100%;
   }
-  .field input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
+  .field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   .field input::placeholder { color: var(--muted); }
-
   .btn-primary {
-    width: 100%;
-    padding: 11px;
+    width: 100%; padding: 11px;
     background: linear-gradient(90deg, #8a35cc, var(--accent));
-    border: none;
-    border-radius: var(--radius-sm);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: opacity .2s, transform .1s;
+    border: none; border-radius: var(--radius-sm);
+    color: #fff; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: opacity .2s, transform .1s;
   }
-  .btn-primary:hover { opacity: 0.88; }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { opacity: 0.45; cursor: default; }
-
+  .btn-primary:hover { opacity: .88; }
+  .btn-primary:active { transform: scale(.98); }
+  .btn-primary:disabled { opacity: .45; cursor: default; }
   .erro-box {
-    font-size: 12px;
-    color: #ff6b6b;
-    background: rgba(255,94,94,0.08);
-    border: 1px solid rgba(255,94,94,0.2);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    display: none;
+    font-size: 12px; color: #ff6b6b;
+    background: rgba(255,94,94,.08); border: 1px solid rgba(255,94,94,.2);
+    border-radius: var(--radius-sm); padding: 8px 12px; display: none;
   }
   .erro-box.visible { display: block; }
 
   /* ── TOPBAR ── */
   .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 14px 28px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    flex-shrink: 0;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100; flex-shrink: 0;
   }
-  .topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 15px;
-  }
+  .topbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
   .topbar-brand span { color: var(--accent); }
   .admin-badge {
-    font-size: 11px;
-    font-weight: 600;
-    background: rgba(255,94,94,0.12);
-    color: #ff8080;
-    border: 1px solid rgba(255,94,94,0.2);
-    border-radius: 20px;
-    padding: 2px 10px;
-    letter-spacing: 0.04em;
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    font-size: 11px; font-weight: 600;
+    background: rgba(255,94,94,.12); color: #ff8080;
+    border: 1px solid rgba(255,94,94,.2); border-radius: 20px;
+    padding: 2px 10px; letter-spacing: .04em;
   }
   .btn-sair {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: color .2s, border-color .2s;
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; background: transparent; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--muted);
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: color .2s, border-color .2s;
   }
-  .btn-sair:hover { color: var(--danger); border-color: rgba(255,94,94,0.3); }
+  .btn-sair:hover { color: var(--danger); border-color: rgba(255,94,94,.3); }
 
   /* ── MAIN ── */
-  .main {
-    flex: 1;
-    overflow: auto;
-    padding: 32px;
-  }
-  .page-inner {
-    max-width: 900px;
-    margin: 0 auto;
-  }
+  .main { flex: 1; overflow: auto; padding: 32px; }
+  .page-inner { max-width: 900px; margin: 0 auto; }
 
   /* ── STATS ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
+  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
   .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    display: flex; flex-direction: column; gap: 10px;
   }
-  .stat-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .stat-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-  .stat-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .stat-value {
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 1;
-  }
+  .stat-header { display: flex; align-items: center; justify-content: space-between; }
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .stat-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .stat-value { font-size: 32px; font-weight: 700; line-height: 1; }
   .stat-sub { font-size: 12px; color: var(--muted); }
 
-  /* ── SECTION HEADER ── */
+  /* ── SECTION ── */
   .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; flex-wrap: wrap; gap: 12px;
   }
   .section-title { font-size: 16px; font-weight: 600; }
   .section-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
-
   .btn-novo {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 16px;
-    background: var(--accent);
-    border: none;
-    border-radius: var(--radius-sm);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: opacity .2s;
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 16px; background: var(--accent); border: none;
+    border-radius: var(--radius-sm); color: #fff;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: opacity .2s;
   }
-  .btn-novo:hover { opacity: 0.88; }
+  .btn-novo:hover { opacity: .88; }
 
-  /* ── FORM INLINE ── */
+  /* ── FORM BÁSICO ── */
   .form-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px;
-    margin-bottom: 18px;
-    display: none;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+    margin-bottom: 18px; display: none;
   }
   .form-card.visible { display: block; }
   .form-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    font-size: 14px; font-weight: 600; margin-bottom: 18px;
+    display: flex; align-items: center; justify-content: space-between;
   }
   .btn-fechar {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 18px;
-    cursor: pointer;
-    padding: 2px 6px;
-    transition: color .2s;
+    background: none; border: none; color: var(--muted);
+    font-size: 18px; cursor: pointer; padding: 2px 6px; transition: color .2s;
   }
   .btn-fechar:hover { color: var(--text); }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
   .form-field { display: flex; flex-direction: column; gap: 6px; }
   .form-field label { font-size: 12px; font-weight: 500; color: var(--muted); }
   .form-field input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    font-size: 13px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-    width: 100%;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 9px 12px;
+    font-size: 13px; color: var(--text);
+    font-family: 'Inter', sans-serif; outline: none;
+    transition: border-color .2s, box-shadow .2s; width: 100%;
   }
-  .form-field input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
+  .form-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   .form-field input::placeholder { color: var(--muted); }
-
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
+  .form-actions { display: flex; justify-content: flex-end; gap: 8px; }
   .btn-cancelar {
-    padding: 9px 16px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: color .2s, border-color .2s;
+    padding: 9px 16px; background: transparent; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--muted);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: color .2s, border-color .2s;
   }
-  .btn-cancelar:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .btn-cancelar:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
   .btn-salvar {
-    padding: 9px 20px;
-    background: var(--accent);
-    border: none;
-    border-radius: var(--radius-sm);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: opacity .2s;
+    padding: 9px 20px; background: var(--accent); border: none;
+    border-radius: var(--radius-sm); color: #fff;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: opacity .2s;
   }
-  .btn-salvar:hover { opacity: 0.88; }
-  .btn-salvar:disabled { opacity: 0.45; cursor: default; }
+  .btn-salvar:hover { opacity: .88; }
+  .btn-salvar:disabled { opacity: .45; cursor: default; }
 
   /* ── TABELA ── */
   .table-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
   }
   table { width: 100%; border-collapse: collapse; }
-  thead tr { background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); }
-  th {
-    padding: 12px 20px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
+  thead tr { background: rgba(255,255,255,.02); border-bottom: 1px solid var(--border); }
+  th { padding: 12px 20px; text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
   td { padding: 14px 20px; font-size: 13px; border-top: 1px solid var(--border); }
   tbody tr { transition: background .15s; }
-  tbody tr:hover { background: rgba(255,255,255,0.02); }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .badge-ativo { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
-  .badge-inativo { background: rgba(255,94,94,0.1); color: #ff5e5e; border: 1px solid rgba(255,94,94,0.2); }
-
+  tbody tr:hover { background: rgba(255,255,255,.02); }
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-ativo { background: rgba(74,222,128,.1); color: #4ade80; border: 1px solid rgba(74,222,128,.2); }
+  .badge-inativo { background: rgba(255,94,94,.1); color: #ff5e5e; border: 1px solid rgba(255,94,94,.2); }
   .actions { display: flex; align-items: center; gap: 6px; }
   .btn-action {
-    padding: 5px 10px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--muted);
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: color .2s, border-color .2s;
+    padding: 5px 10px; background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); font-size: 12px; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: color .2s, border-color .2s;
   }
-  .btn-action:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-  .btn-action.danger:hover { color: var(--danger); border-color: rgba(255,94,94,0.3); }
-
-  /* busca */
+  .btn-action:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+  .btn-action.danger:hover { color: var(--danger); border-color: rgba(255,94,94,.3); }
+  .btn-action.accent { color: var(--accent); border-color: rgba(181,101,255,.3); }
+  .btn-action.accent:hover { background: var(--accent-dim); }
   .busca-wrap { position: relative; margin-bottom: 14px; }
   .busca-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: .4; pointer-events: none; }
   .busca-wrap input {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px 10px 36px;
-    font-size: 13px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color .2s;
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px 10px 36px;
+    font-size: 13px; color: var(--text); font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color .2s;
   }
   .busca-wrap input:focus { border-color: var(--accent); }
-
-  /* empty */
-  .empty-row td {
-    text-align: center;
-    padding: 40px;
-    color: var(--muted);
-  }
+  .empty-row td { text-align: center; padding: 40px; color: var(--muted); }
   .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  /* ── DRAWER DE PERSONALIZAÇÃO ── */
+  .drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: 200; opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(540px, 100vw);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 201;
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-title { font-size: 15px; font-weight: 600; }
+  .drawer-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .btn-drawer-close {
+    background: none; border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer; padding: 4px 8px;
+    transition: color .2s; line-height: 1;
+  }
+  .btn-drawer-close:hover { color: var(--text); }
+
+  .drawer-body { flex: 1; overflow-y: auto; }
+
+  .drawer-section {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer-section:last-child { border-bottom: none; }
+
+  .sec-label {
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-label::after { content:''; flex:1; height:1px; background: var(--border); }
+
+  /* upload logo */
+  .logo-area {
+    border: 2px dashed rgba(181,101,255,.25); border-radius: var(--radius);
+    padding: 22px; text-align: center; cursor: pointer;
+    transition: border-color .2s, background .2s; position: relative; overflow: hidden;
+  }
+  .logo-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .logo-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .logo-preview-img {
+    width: 70px; height: 70px; border-radius: 10px; object-fit: contain;
+    background: var(--surface2); display: none; margin: 0 auto 8px;
+  }
+  .logo-preview-img.visible { display: block; }
+  .logo-area-icon { font-size: 28px; margin-bottom: 8px; }
+  .logo-area-text { font-size: 12px; color: var(--muted); }
+  .logo-area-text strong { color: var(--accent); }
+
+  /* d-field */
+  .d-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .d-field:last-child { margin-bottom: 0; }
+  .d-field label { font-size: 12px; font-weight: 500; color: var(--muted); }
+  .d-field input[type=text], .d-field input[type=url] {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 9px 12px;
+    font-size: 13px; color: var(--text); font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color .2s, box-shadow .2s; width: 100%;
+  }
+  .d-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+  /* cores */
+  .color-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .color-field label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+  .color-wrap {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 7px 10px; cursor: pointer;
+  }
+  .color-wrap input[type=color] { width: 22px; height: 22px; border: none; border-radius: 4px; cursor: pointer; padding: 0; background: none; }
+  .color-hex { font-size: 13px; color: var(--text); font-family: monospace; flex: 1; }
+
+  /* bg options */
+  .bg-opts { display: flex; flex-direction: column; gap: 8px; }
+  .bg-opt {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: border-color .2s, background .2s;
+  }
+  .bg-opt.sel { border-color: var(--accent); background: var(--accent-dim); }
+  .bg-opt input[type=radio] { display: none; }
+  .bg-thumb { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(255,255,255,.1); }
+  .bg-opt-info { flex: 1; }
+  .bg-opt-name { font-size: 13px; font-weight: 500; }
+  .bg-opt-desc { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .bg-check {
+    width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 9px; color: transparent;
+    transition: all .2s;
+  }
+  .bg-opt.sel .bg-check { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ícones */
+  .icons-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+  .icon-item {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .icon-img-btn {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: var(--accent-dim); border: 1.5px dashed rgba(181,101,255,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; cursor: pointer; flex-shrink: 0;
+    overflow: hidden; position: relative; transition: border-color .2s;
+  }
+  .icon-img-btn:hover { border-color: var(--accent); }
+  .icon-img-btn input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .icon-img-btn img { width: 100%; height: 100%; object-fit: contain; display: none; }
+  .icon-img-btn img.visible { display: block; }
+  .icon-img-btn .plus { pointer-events: none; color: var(--muted); }
+  .icon-fields { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .icon-fields input {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 7px 10px;
+    font-size: 12px; color: var(--text); font-family: 'Inter', sans-serif;
+    outline: none; transition: border-color .2s;
+  }
+  .icon-fields input:focus { border-color: var(--accent); }
+  .icon-fields input::placeholder { color: var(--muted); }
+  .btn-rm-icon {
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: 14px; padding: 4px; border-radius: 6px; transition: color .2s, background .2s;
+  }
+  .btn-rm-icon:hover { color: var(--danger); background: rgba(255,94,94,.1); }
+  .btn-add-icon {
+    width: 100%; padding: 9px;
+    background: transparent; border: 1.5px dashed rgba(181,101,255,.25);
+    border-radius: var(--radius-sm); color: var(--accent);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: background .2s, border-color .2s;
+  }
+  .btn-add-icon:hover { background: var(--accent-dim); border-color: var(--accent); }
+
+  /* drawer footer */
+  .drawer-footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-hint { font-size: 12px; color: var(--muted); }
+  .drawer-hint.unsaved { color: rgba(250,204,21,.8); }
 
   /* ── TOAST ── */
   .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--surface);
-    border: 1px solid rgba(74,222,128,0.3);
-    border-radius: var(--radius);
-    padding: 12px 18px;
-    font-size: 13px;
-    color: var(--success);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-    transform: translateY(80px);
-    opacity: 0;
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--surface); border: 1px solid rgba(74,222,128,.3);
+    border-radius: var(--radius); padding: 12px 18px;
+    font-size: 13px; color: var(--success); font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    transform: translateY(80px); opacity: 0;
     transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
-    z-index: 999;
-    pointer-events: none;
+    z-index: 999; pointer-events: none;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
 
-  /* scrollbar */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(181,101,255,0.2); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: rgba(181,101,255,.2); border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -482,7 +420,6 @@
     <div class="login-badge">🔐 Acesso restrito</div>
     <div class="login-brand">Infinity Stream <span>TV</span></div>
     <div class="login-sub">Painel Administrativo</div>
-
     <div class="login-card">
       <h2>Entrar como administrador</h2>
       <div class="field">
@@ -508,19 +445,15 @@
     Infinity Stream <span>TV</span>
     <span class="admin-badge">Admin</span>
   </div>
-  <div class="topbar-right">
-    <button class="btn-sair" id="btn-sair">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Sair
-    </button>
-  </div>
+  <button class="btn-sair" id="btn-sair">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Sair
+  </button>
 </div>
 
 <!-- MAIN -->
 <div class="main" id="main" style="display:none;">
   <div class="page-inner">
-
-    <!-- Stats -->
     <div style="margin-bottom:28px;">
       <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Painel Admin</h2>
       <p style="font-size:13px;color:var(--muted);">Gerencie todos os revendedores da plataforma.</p>
@@ -530,7 +463,7 @@
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Revendedores ativos</span>
-          <div class="stat-icon" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.15);">
+          <div class="stat-icon" style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.15);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
         </div>
@@ -540,7 +473,7 @@
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Total de clientes</span>
-          <div class="stat-icon" style="background:rgba(181,101,255,0.1);border:1px solid rgba(181,101,255,0.15);">
+          <div class="stat-icon" style="background:rgba(181,101,255,.1);border:1px solid rgba(181,101,255,.15);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
           </div>
         </div>
@@ -550,12 +483,12 @@
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Novos este mês</span>
-          <div class="stat-icon" style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.15);">
+          <div class="stat-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.15);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           </div>
         </div>
         <div class="stat-value" id="stat-novos">—</div>
-        <div class="stat-sub" id="stat-novos-sub">revendedores</div>
+        <div class="stat-sub">revendedores</div>
       </div>
     </div>
 
@@ -571,37 +504,19 @@
       </button>
     </div>
 
-    <!-- Form -->
+    <!-- Form básico (novo) -->
     <div class="form-card" id="form-card">
       <div class="form-title">
         <span id="form-titulo">Novo revendedor</span>
         <button class="btn-fechar" id="btn-fechar-form">✕</button>
       </div>
       <div class="form-grid">
-        <div class="form-field">
-          <label>Nome da marca</label>
-          <input type="text" id="f-nome" placeholder="Ex: Stream Plus"/>
-        </div>
-        <div class="form-field">
-          <label>Slug (URL)</label>
-          <input type="text" id="f-slug" placeholder="Ex: stream-plus"/>
-        </div>
-        <div class="form-field">
-          <label>E-mail do gestor</label>
-          <input type="email" id="f-email" placeholder="gestor@suamarca.com"/>
-        </div>
-        <div class="form-field">
-          <label>Senha</label>
-          <input type="text" id="f-senha" placeholder="Senha de acesso"/>
-        </div>
-        <div class="form-field">
-          <label>WhatsApp de suporte</label>
-          <input type="text" id="f-suporte" placeholder="https://wa.me/55119..."/>
-        </div>
-        <div class="form-field">
-          <label>Tagline (opcional)</label>
-          <input type="text" id="f-tagline" placeholder="Ex: Entretenimento sem limites"/>
-        </div>
+        <div class="form-field"><label>Nome da marca</label><input type="text" id="f-nome" placeholder="Ex: Stream Plus"/></div>
+        <div class="form-field"><label>Slug (URL)</label><input type="text" id="f-slug" placeholder="Ex: stream-plus"/></div>
+        <div class="form-field"><label>E-mail do gestor</label><input type="email" id="f-email" placeholder="gestor@suamarca.com"/></div>
+        <div class="form-field"><label>Senha</label><input type="text" id="f-senha" placeholder="Senha de acesso"/></div>
+        <div class="form-field"><label>WhatsApp suporte</label><input type="text" id="f-suporte" placeholder="https://wa.me/55119..."/></div>
+        <div class="form-field"><label>Tagline (opcional)</label><input type="text" id="f-tagline" placeholder="Ex: Entretenimento sem limites"/></div>
       </div>
       <div class="erro-box" id="f-erro" style="margin-bottom:12px;"></div>
       <div class="form-actions">
@@ -621,12 +536,8 @@
       <table>
         <thead>
           <tr>
-            <th>Marca</th>
-            <th>Slug / URL</th>
-            <th>E-mail</th>
-            <th>Clientes</th>
-            <th>Status</th>
-            <th style="text-align:right;">Ações</th>
+            <th>Marca</th><th>Slug / URL</th><th>E-mail</th>
+            <th>Clientes</th><th>Status</th><th style="text-align:right;">Ações</th>
           </tr>
         </thead>
         <tbody id="rev-tbody">
@@ -634,7 +545,111 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
 
+<!-- DRAWER PERSONALIZAÇÃO -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title" id="drawer-title">Personalizar revendedor</div>
+      <div class="drawer-sub" id="drawer-sub">slug</div>
+    </div>
+    <button class="btn-drawer-close" id="btn-drawer-close">✕</button>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Logo -->
+    <div class="drawer-section">
+      <div class="sec-label">Logo</div>
+      <div class="logo-area" id="d-logo-area">
+        <input type="file" id="d-logo-input" accept="image/*"/>
+        <img class="logo-preview-img" id="d-logo-img" src="" alt=""/>
+        <div id="d-logo-placeholder"><div class="logo-area-icon">🖼️</div></div>
+        <div class="logo-area-text"><strong>Clique para enviar logo</strong><br>PNG, SVG ou JPG</div>
+      </div>
+    </div>
+
+    <!-- Identidade -->
+    <div class="drawer-section">
+      <div class="sec-label">Identidade</div>
+      <div class="d-field"><label>Nome da marca</label><input type="text" id="d-nome" placeholder="Stream Plus"/></div>
+      <div class="d-field"><label>Tagline</label><input type="text" id="d-tagline" placeholder="Entretenimento sem limites"/></div>
+      <div class="d-field"><label>WhatsApp suporte</label><input type="url" id="d-suporte" placeholder="https://wa.me/55119..."/></div>
+    </div>
+
+    <!-- Cores -->
+    <div class="drawer-section">
+      <div class="sec-label">Cores</div>
+      <div class="color-row">
+        <div class="color-field">
+          <label>Fundo</label>
+          <div class="color-wrap">
+            <input type="color" id="d-color-bg" value="#0a0612"/>
+            <span class="color-hex" id="d-color-bg-hex">#0a0612</span>
+          </div>
+        </div>
+        <div class="color-field">
+          <label>Destaque</label>
+          <div class="color-wrap">
+            <input type="color" id="d-color-accent" value="#b565ff"/>
+            <span class="color-hex" id="d-color-accent-hex">#b565ff</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fundo -->
+    <div class="drawer-section">
+      <div class="sec-label">Fundo da área do cliente</div>
+      <div class="bg-opts">
+        <label class="bg-opt sel" id="d-bg-solid">
+          <input type="radio" name="d-bg" value="solid" checked/>
+          <div class="bg-thumb" id="d-bg-thumb-solid" style="background:#0a0612;"></div>
+          <div class="bg-opt-info"><div class="bg-opt-name">Cor sólida</div><div class="bg-opt-desc">Usa a cor de fundo</div></div>
+          <div class="bg-check">✓</div>
+        </label>
+        <label class="bg-opt" id="d-bg-gradient">
+          <input type="radio" name="d-bg" value="gradient"/>
+          <div class="bg-thumb" id="d-bg-thumb-gradient" style="background:linear-gradient(135deg,#0a0612,#1a0830);"></div>
+          <div class="bg-opt-info"><div class="bg-opt-name">Gradiente suave</div><div class="bg-opt-desc">Fundo + cor de destaque</div></div>
+          <div class="bg-check">✓</div>
+        </label>
+        <label class="bg-opt" id="d-bg-image">
+          <input type="radio" name="d-bg" value="image"/>
+          <div class="bg-thumb" style="background:linear-gradient(135deg,rgba(181,101,255,.2),rgba(10,6,18,.9));"></div>
+          <div class="bg-opt-info"><div class="bg-opt-name">Imagem personalizada</div><div class="bg-opt-desc">Upload de imagem de fundo</div></div>
+          <div class="bg-check">✓</div>
+        </label>
+      </div>
+      <div id="d-bg-img-upload" style="display:none;margin-top:10px;">
+        <label class="logo-area" style="padding:14px;">
+          <input type="file" id="d-bgimg-input" accept="image/*"/>
+          <div class="logo-area-text"><strong>Enviar imagem de fundo</strong><br>Recomendado 1280×720px</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Ícones -->
+    <div class="drawer-section">
+      <div class="sec-label">Ícones e links</div>
+      <div class="icons-list" id="d-icons-list"></div>
+      <button class="btn-add-icon" id="d-btn-add-icon">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar ícone
+      </button>
+    </div>
+
+  </div><!-- fim drawer-body -->
+
+  <div class="drawer-footer">
+    <span class="drawer-hint unsaved" id="d-hint">● Alterações não salvas</span>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-cancelar" id="d-btn-cancelar">Cancelar</button>
+      <button class="btn-salvar" id="d-btn-salvar">Salvar personalização</button>
+    </div>
   </div>
 </div>
 
@@ -644,304 +659,387 @@
 <script>
 (function(){
 
-  // ── CONFIG ──
   const SUPABASE_URL = 'https://hxptaygjtvyyteyqlpeb.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4cHRheWdqdHZ5eXRleXFscGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNzAxNjEsImV4cCI6MjEwNjY0NjE2MX0.dYAIcixEYEUuxfeFUmoOqTNX0MoO17yKfEdz6K4wZL0';
-
-  // Credenciais do admin (fixas — só você tem acesso)
   const ADMIN_EMAIL = 'admin@infinitystreamtv.com';
   const ADMIN_SENHA = 'admin@infinity2026';
 
-  async function sbFetch(path, options = {}) {
+  async function sbFetch(path, options={}) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
       headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
         'Content-Type': 'application/json',
         'Prefer': options.prefer || 'return=representation',
-        ...(options.headers || {})
-      },
-      ...options
+        ...(options.headers||{})
+      }, ...options
     });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `HTTP ${res.status}`);
-    }
-    const text = await res.text();
-    return text ? JSON.parse(text) : null;
+    if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e.message||`HTTP ${res.status}`); }
+    const t=await res.text(); return t?JSON.parse(t):null;
   }
 
-  // ── HELPERS ──
   function showToast(msg, erro) {
-    const t = document.getElementById('toast');
-    document.getElementById('toast-msg').textContent = msg;
-    t.style.borderColor = erro ? 'rgba(255,94,94,0.3)' : 'rgba(74,222,128,0.3)';
-    t.style.color = erro ? '#ff6b6b' : 'var(--success)';
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
+    const t=document.getElementById('toast');
+    document.getElementById('toast-msg').textContent=msg;
+    t.style.borderColor=erro?'rgba(255,94,94,.3)':'rgba(74,222,128,.3)';
+    t.style.color=erro?'#ff6b6b':'var(--success)';
+    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800);
   }
-
   function slugify(str) {
-    return str.toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/-+/g, '-')
-      .slice(0, 40);
+    return str.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-').slice(0,40);
   }
 
   // ── AUTH ──
   document.getElementById('btn-login').addEventListener('click', fazerLogin);
-  ['l-email','l-senha'].forEach(id => {
-    document.getElementById(id).addEventListener('keydown', e => {
-      if (e.key === 'Enter') fazerLogin();
-    });
-  });
+  ['l-email','l-senha'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();}));
 
   function fazerLogin() {
-    const email = document.getElementById('l-email').value.trim().toLowerCase();
-    const senha = document.getElementById('l-senha').value;
-    const erroEl = document.getElementById('l-erro');
-
-    if (email !== ADMIN_EMAIL || senha !== ADMIN_SENHA) {
-      erroEl.textContent = 'Credenciais incorretas.';
-      erroEl.classList.add('visible');
-      return;
+    const email=document.getElementById('l-email').value.trim().toLowerCase();
+    const senha=document.getElementById('l-senha').value;
+    const erroEl=document.getElementById('l-erro');
+    if(email!==ADMIN_EMAIL||senha!==ADMIN_SENHA){
+      erroEl.textContent='Credenciais incorretas.'; erroEl.classList.add('visible'); return;
     }
-
-    sessionStorage.setItem('admin_session', '1');
+    sessionStorage.setItem('admin_session','1');
     mostrarAdmin();
   }
-
   function mostrarAdmin() {
     document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('topbar').style.display = '';
-    document.getElementById('main').style.display = '';
+    document.getElementById('topbar').style.display='';
+    document.getElementById('main').style.display='';
     carregarDados();
   }
-
-  document.getElementById('btn-sair').addEventListener('click', () => {
-    if (confirm('Sair do painel admin?')) {
+  document.getElementById('btn-sair').addEventListener('click',()=>{
+    if(confirm('Sair do painel admin?')){
       sessionStorage.removeItem('admin_session');
       document.getElementById('login-screen').classList.remove('hidden');
-      document.getElementById('topbar').style.display = 'none';
-      document.getElementById('main').style.display = 'none';
-      document.getElementById('l-email').value = '';
-      document.getElementById('l-senha').value = '';
+      document.getElementById('topbar').style.display='none';
+      document.getElementById('main').style.display='none';
+      document.getElementById('l-email').value=''; document.getElementById('l-senha').value='';
     }
   });
 
   // ── DADOS ──
-  let todosRevs = [];
-  let editandoId = null;
+  let todosRevs=[]; let clientesData=[]; let editandoId=null;
 
   async function carregarDados() {
     try {
-      const [revs, clientes] = await Promise.all([
+      const [revs,clientes]=await Promise.all([
         sbFetch('revendedores?order=criado_em.desc'),
         sbFetch('clientes?select=id,revendedor_id,ativo')
       ]);
-
-      todosRevs = revs || [];
-      const clientesData = clientes || [];
-
-      // stats
-      const ativos = todosRevs.filter(r => r.ativo).length;
-      const agora = new Date();
-      const novos = todosRevs.filter(r => {
-        const d = new Date(r.criado_em);
-        return d.getMonth() === agora.getMonth() && d.getFullYear() === agora.getFullYear();
-      }).length;
-
-      document.getElementById('stat-ativos').textContent  = ativos;
-      document.getElementById('stat-total').textContent   = todosRevs.length;
-      document.getElementById('stat-clientes').textContent = clientesData.length;
-      document.getElementById('stat-novos').textContent   = novos;
-      document.getElementById('rev-count').textContent    = `${todosRevs.length} revendedor${todosRevs.length !== 1 ? 'es' : ''} cadastrado${todosRevs.length !== 1 ? 's' : ''}`;
-
-      renderTabela(todosRevs, clientesData);
-    } catch(err) {
-      showToast('Erro ao carregar: ' + err.message, true);
-    }
+      todosRevs=revs||[]; clientesData=clientes||[];
+      const ativos=todosRevs.filter(r=>r.ativo).length;
+      const agora=new Date();
+      const novos=todosRevs.filter(r=>{const d=new Date(r.criado_em);return d.getMonth()===agora.getMonth()&&d.getFullYear()===agora.getFullYear();}).length;
+      document.getElementById('stat-ativos').textContent=ativos;
+      document.getElementById('stat-total').textContent=todosRevs.length;
+      document.getElementById('stat-clientes').textContent=clientesData.length;
+      document.getElementById('stat-novos').textContent=novos;
+      document.getElementById('rev-count').textContent=`${todosRevs.length} revendedor${todosRevs.length!==1?'es':''} cadastrado${todosRevs.length!==1?'s':''}`;
+      renderTabela(todosRevs);
+    } catch(err){ showToast('Erro ao carregar: '+err.message,true); }
   }
 
-  function renderTabela(lista, clientesData) {
-    const tbody = document.getElementById('rev-tbody');
-    if (!lista || lista.length === 0) {
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="6"><div class="empty-icon">🏪</div>Nenhum revendedor ainda.</td></tr>`;
-      return;
+  function renderTabela(lista) {
+    const tbody=document.getElementById('rev-tbody');
+    if(!lista||lista.length===0){
+      tbody.innerHTML=`<tr class="empty-row"><td colspan="6"><div class="empty-icon">🏪</div>Nenhum revendedor ainda.</td></tr>`; return;
     }
-    tbody.innerHTML = lista.map(r => {
-      const qtdClientes = clientesData
-        ? clientesData.filter(c => c.revendedor_id === r.id).length
-        : '—';
-      return `
-        <tr>
-          <td>
-            <div style="font-weight:600;">${r.nome_marca}</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px;">${r.tagline || ''}</div>
-          </td>
-          <td>
-            <code style="font-size:12px;background:var(--surface2);padding:2px 8px;border-radius:5px;color:var(--accent);">${r.slug}</code>
-          </td>
-          <td style="color:var(--muted);">${r.email || '—'}</td>
-          <td style="text-align:center;">${qtdClientes}</td>
-          <td>
-            <span class="badge ${r.ativo ? 'badge-ativo' : 'badge-inativo'}">
-              ${r.ativo ? 'Ativo' : 'Inativo'}
-            </span>
-          </td>
-          <td>
-            <div class="actions" style="justify-content:flex-end;">
-              <button class="btn-action" onclick="editarRev('${r.id}')">Editar</button>
-              <button class="btn-action ${r.ativo ? 'danger' : ''}" onclick="toggleRev('${r.id}', ${r.ativo})">
-                ${r.ativo ? 'Desativar' : 'Ativar'}
-              </button>
-            </div>
-          </td>
-        </tr>
-      `;
+    tbody.innerHTML=lista.map(r=>{
+      const qtd=clientesData.filter(c=>c.revendedor_id===r.id).length;
+      return `<tr>
+        <td><div style="font-weight:600;">${r.nome_marca}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${r.tagline||''}</div></td>
+        <td><code style="font-size:12px;background:var(--surface2);padding:2px 8px;border-radius:5px;color:var(--accent);">${r.slug}</code></td>
+        <td style="color:var(--muted);">${r.email||'—'}</td>
+        <td style="text-align:center;">${qtd}</td>
+        <td><span class="badge ${r.ativo?'badge-ativo':'badge-inativo'}">${r.ativo?'Ativo':'Inativo'}</span></td>
+        <td><div class="actions" style="justify-content:flex-end;">
+          <button class="btn-action accent" onclick="abrirDrawer('${r.id}')">✏️ Personalizar</button>
+          <button class="btn-action" onclick="editarRevBasico('${r.id}')">Editar</button>
+          <button class="btn-action ${r.ativo?'danger':''}" onclick="toggleRev('${r.id}',${r.ativo})">${r.ativo?'Desativar':'Ativar'}</button>
+        </div></td>
+      </tr>`;
     }).join('');
   }
 
-  // busca
-  document.getElementById('busca-rev').addEventListener('input', function(){
-    const q = this.value.toLowerCase();
-    const filtrado = todosRevs.filter(r =>
-      r.nome_marca.toLowerCase().includes(q) ||
-      r.slug.toLowerCase().includes(q) ||
-      (r.email || '').toLowerCase().includes(q)
-    );
-    renderTabela(filtrado, null);
+  document.getElementById('busca-rev').addEventListener('input',function(){
+    const q=this.value.toLowerCase();
+    renderTabela(todosRevs.filter(r=>r.nome_marca.toLowerCase().includes(q)||r.slug.toLowerCase().includes(q)||(r.email||'').toLowerCase().includes(q)));
   });
 
-  // ── FORM ──
-  document.getElementById('btn-novo-rev').addEventListener('click', () => {
-    editandoId = null;
-    limparForm();
-    document.getElementById('form-titulo').textContent = 'Novo revendedor';
+  // ── FORM BÁSICO ──
+  document.getElementById('btn-novo-rev').addEventListener('click',()=>{
+    editandoId=null; limparForm();
+    document.getElementById('form-titulo').textContent='Novo revendedor';
     document.getElementById('form-card').classList.add('visible');
     document.getElementById('f-nome').focus();
   });
-
-  document.getElementById('btn-fechar-form').addEventListener('click', fecharForm);
-  document.getElementById('btn-cancelar-form').addEventListener('click', fecharForm);
-
-  function fecharForm() {
-    document.getElementById('form-card').classList.remove('visible');
-    limparForm();
-    editandoId = null;
+  document.getElementById('btn-fechar-form').addEventListener('click',fecharForm);
+  document.getElementById('btn-cancelar-form').addEventListener('click',fecharForm);
+  function fecharForm(){ document.getElementById('form-card').classList.remove('visible'); limparForm(); editandoId=null; }
+  function limparForm(){
+    ['f-nome','f-slug','f-email','f-senha','f-suporte','f-tagline'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-erro').classList.remove('visible'); document.getElementById('f-erro').textContent='';
   }
+  document.getElementById('f-nome').addEventListener('input',function(){ if(!editandoId) document.getElementById('f-slug').value=slugify(this.value); });
+  document.getElementById('btn-salvar-rev').addEventListener('click',salvarRevBasico);
 
-  function limparForm() {
-    ['f-nome','f-slug','f-email','f-senha','f-suporte','f-tagline'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('f-erro').classList.remove('visible');
-    document.getElementById('f-erro').textContent = '';
-  }
-
-  // auto-slug ao digitar nome
-  document.getElementById('f-nome').addEventListener('input', function(){
-    if (!editandoId) {
-      document.getElementById('f-slug').value = slugify(this.value);
-    }
-  });
-
-  document.getElementById('btn-salvar-rev').addEventListener('click', salvarRev);
-
-  async function salvarRev() {
-    const nome    = document.getElementById('f-nome').value.trim();
-    const slug    = document.getElementById('f-slug').value.trim();
-    const email   = document.getElementById('f-email').value.trim().toLowerCase();
-    const senha   = document.getElementById('f-senha').value.trim();
-    const suporte = document.getElementById('f-suporte').value.trim();
-    const tagline = document.getElementById('f-tagline').value.trim();
-    const erroEl  = document.getElementById('f-erro');
-    const btn     = document.getElementById('btn-salvar-rev');
-
-    if (!nome || !slug) {
-      erroEl.textContent = 'Nome e slug são obrigatórios.';
-      erroEl.classList.add('visible');
-      return;
-    }
-    if (!editandoId && (!email || !senha)) {
-      erroEl.textContent = 'E-mail e senha são obrigatórios.';
-      erroEl.classList.add('visible');
-      return;
-    }
-
-    erroEl.classList.remove('visible');
-    btn.disabled = true;
-    btn.textContent = 'Salvando…';
-
+  async function salvarRevBasico(){
+    const nome=document.getElementById('f-nome').value.trim();
+    const slug=document.getElementById('f-slug').value.trim();
+    const email=document.getElementById('f-email').value.trim().toLowerCase();
+    const senha=document.getElementById('f-senha').value.trim();
+    const suporte=document.getElementById('f-suporte').value.trim();
+    const tagline=document.getElementById('f-tagline').value.trim();
+    const erroEl=document.getElementById('f-erro');
+    const btn=document.getElementById('btn-salvar-rev');
+    if(!nome||!slug){erroEl.textContent='Nome e slug são obrigatórios.';erroEl.classList.add('visible');return;}
+    if(!editandoId&&(!email||!senha)){erroEl.textContent='E-mail e senha são obrigatórios.';erroEl.classList.add('visible');return;}
+    erroEl.classList.remove('visible'); btn.disabled=true; btn.textContent='Salvando…';
     try {
-      const payload = { nome_marca: nome, slug, tagline, suporte_url: suporte };
-      if (email) payload.email = email;
-      if (senha) payload.senha = senha;
-
-      if (editandoId) {
-        await sbFetch(`revendedores?id=eq.${editandoId}`, {
-          method: 'PATCH',
-          body: JSON.stringify(payload)
-        });
+      const payload={nome_marca:nome,slug,tagline,suporte_url:suporte};
+      if(email) payload.email=email; if(senha) payload.senha=senha;
+      if(editandoId){
+        await sbFetch(`revendedores?id=eq.${editandoId}`,{method:'PATCH',body:JSON.stringify(payload)});
         showToast('Revendedor atualizado');
       } else {
-        payload.ativo = true;
-        await sbFetch('revendedores', {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
+        payload.ativo=true;
+        await sbFetch('revendedores',{method:'POST',body:JSON.stringify(payload)});
         showToast('Revendedor criado com sucesso');
       }
-
-      fecharForm();
-      carregarDados();
-    } catch(err) {
-      erroEl.textContent = err.message.includes('unique')
-        ? 'Slug ou e-mail já em uso.'
-        : err.message;
+      fecharForm(); carregarDados();
+    } catch(err){
+      erroEl.textContent=err.message.includes('unique')?'Slug ou e-mail já em uso.':err.message;
       erroEl.classList.add('visible');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Salvar';
-    }
+    } finally { btn.disabled=false; btn.textContent='Salvar'; }
   }
 
-  // editar
-  window.editarRev = function(id) {
-    const r = todosRevs.find(x => x.id === id);
-    if (!r) return;
-    editandoId = id;
-    document.getElementById('f-nome').value    = r.nome_marca || '';
-    document.getElementById('f-slug').value    = r.slug || '';
-    document.getElementById('f-email').value   = r.email || '';
-    document.getElementById('f-senha').value   = '';
-    document.getElementById('f-suporte').value = r.suporte_url || '';
-    document.getElementById('f-tagline').value = r.tagline || '';
-    document.getElementById('form-titulo').textContent = 'Editar revendedor';
+  window.editarRevBasico=function(id){
+    const r=todosRevs.find(x=>x.id===id); if(!r) return;
+    editandoId=id;
+    document.getElementById('f-nome').value=r.nome_marca||'';
+    document.getElementById('f-slug').value=r.slug||'';
+    document.getElementById('f-email').value=r.email||'';
+    document.getElementById('f-senha').value='';
+    document.getElementById('f-suporte').value=r.suporte_url||'';
+    document.getElementById('f-tagline').value=r.tagline||'';
+    document.getElementById('form-titulo').textContent='Editar revendedor';
     document.getElementById('form-card').classList.add('visible');
-    document.getElementById('f-nome').focus();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top:0,behavior:'smooth'});
   };
 
-  // ativar/desativar
-  window.toggleRev = async function(id, ativo) {
-    try {
-      await sbFetch(`revendedores?id=eq.${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ ativo: !ativo })
-      });
-      showToast(ativo ? 'Revendedor desativado' : 'Revendedor ativado');
-      carregarDados();
-    } catch(err) {
-      showToast('Erro: ' + err.message, true);
-    }
+  window.toggleRev=async function(id,ativo){
+    try { await sbFetch(`revendedores?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({ativo:!ativo})}); showToast(ativo?'Revendedor desativado':'Revendedor ativado'); carregarDados(); }
+    catch(err){ showToast('Erro: '+err.message,true); }
   };
+
+  // ── DRAWER PERSONALIZAÇÃO ──
+  let drawerRevId=null;
+  let drawerIconCounter=0;
+  let drawerIcons=[];
+  let drawerLogoUrl=null;
+  let drawerBgImageUrl=null;
+  let drawerUnsaved=false;
+
+  function drawerMark(){ drawerUnsaved=true; document.getElementById('d-hint').textContent='● Alterações não salvas'; }
+
+  window.abrirDrawer=function(id){
+    const r=todosRevs.find(x=>x.id===id); if(!r) return;
+    drawerRevId=id;
+    drawerIcons=[]; drawerIconCounter=0; drawerLogoUrl=null; drawerBgImageUrl=null; drawerUnsaved=false;
+
+    // preencher cabeçalho
+    document.getElementById('drawer-title').textContent='Personalizar: '+r.nome_marca;
+    document.getElementById('drawer-sub').textContent='slug: '+r.slug;
+
+    // logo
+    const dImg=document.getElementById('d-logo-img');
+    const dPh=document.getElementById('d-logo-placeholder');
+    if(r.logo_url){ dImg.src=r.logo_url; dImg.classList.add('visible'); dPh.style.display='none'; drawerLogoUrl=r.logo_url; }
+    else { dImg.src=''; dImg.classList.remove('visible'); dPh.style.display=''; }
+
+    // identidade
+    document.getElementById('d-nome').value=r.nome_marca||'';
+    document.getElementById('d-tagline').value=r.tagline||'';
+    document.getElementById('d-suporte').value=r.suporte_url||'';
+
+    // cores
+    const bg=r.cor_fundo||'#0a0612'; const ac=r.cor_destaque||'#b565ff';
+    document.getElementById('d-color-bg').value=bg; document.getElementById('d-color-bg-hex').textContent=bg;
+    document.getElementById('d-color-accent').value=ac; document.getElementById('d-color-accent-hex').textContent=ac;
+    document.getElementById('d-bg-thumb-solid').style.background=bg;
+    document.getElementById('d-bg-thumb-gradient').style.background=`linear-gradient(135deg,${bg},${ac}44,${bg})`;
+
+    // bg type
+    const bgType=r.bg_type||'solid';
+    document.querySelectorAll('input[name="d-bg"]').forEach(radio=>{
+      radio.checked=radio.value===bgType;
+      const opt=radio.closest('.bg-opt');
+      if(radio.value===bgType) opt.classList.add('sel'); else opt.classList.remove('sel');
+    });
+    document.getElementById('d-bg-img-upload').style.display=bgType==='image'?'block':'none';
+    drawerBgImageUrl=r.bg_image_url||null;
+
+    // ícones
+    document.getElementById('d-icons-list').innerHTML='';
+    if(r.icones&&r.icones.length>0){
+      r.icones.forEach(ic=>{
+        const id2=++drawerIconCounter;
+        drawerIcons.push({id:id2,label:ic.label||'',url:ic.url||'',imgUrl:ic.imgUrl||null});
+        const el=criarIconItem(id2,ic);
+        document.getElementById('d-icons-list').appendChild(el);
+      });
+    }
+
+    document.getElementById('d-hint').textContent='Dados carregados';
+    document.getElementById('drawer-overlay').classList.add('open');
+    document.getElementById('drawer').classList.add('open');
+  };
+
+  function fecharDrawer(){
+    document.getElementById('drawer-overlay').classList.remove('open');
+    document.getElementById('drawer').classList.remove('open');
+    drawerRevId=null;
+  }
+
+  document.getElementById('drawer-overlay').addEventListener('click',fecharDrawer);
+  document.getElementById('btn-drawer-close').addEventListener('click',fecharDrawer);
+  document.getElementById('d-btn-cancelar').addEventListener('click',fecharDrawer);
+
+  // logo upload no drawer
+  document.getElementById('d-logo-input').addEventListener('change',async function(e){
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      const img=document.getElementById('d-logo-img');
+      img.src=ev.target.result; img.classList.add('visible');
+      document.getElementById('d-logo-placeholder').style.display='none';
+    };
+    reader.readAsDataURL(file);
+    try {
+      const r=todosRevs.find(x=>x.id===drawerRevId);
+      const slug=(r&&r.slug)||'logo';
+      const ext=file.name.split('.').pop();
+      const fileName=`${slug}-${Date.now()}.${ext}`;
+      const res=await fetch(`${SUPABASE_URL}/storage/v1/object/logos/${fileName}`,{
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':file.type,'x-upsert':'true'},
+        body:file
+      });
+      if(!res.ok) throw new Error('Upload falhou');
+      drawerLogoUrl=`${SUPABASE_URL}/storage/v1/object/public/logos/${fileName}`;
+      showToast('✓ Logo enviada'); drawerMark();
+    } catch(err){ showToast('❌ Erro no upload: '+err.message,true); }
+  });
+
+  // identidade
+  ['d-nome','d-tagline','d-suporte'].forEach(id=>document.getElementById(id).addEventListener('input',drawerMark));
+
+  // cores
+  document.getElementById('d-color-bg').addEventListener('input',function(){
+    document.getElementById('d-color-bg-hex').textContent=this.value;
+    document.getElementById('d-bg-thumb-solid').style.background=this.value;
+    const ac=document.getElementById('d-color-accent').value;
+    document.getElementById('d-bg-thumb-gradient').style.background=`linear-gradient(135deg,${this.value},${ac}44,${this.value})`;
+    drawerMark();
+  });
+  document.getElementById('d-color-accent').addEventListener('input',function(){
+    document.getElementById('d-color-accent-hex').textContent=this.value;
+    const bg=document.getElementById('d-color-bg').value;
+    document.getElementById('d-bg-thumb-gradient').style.background=`linear-gradient(135deg,${bg},${this.value}44,${bg})`;
+    drawerMark();
+  });
+
+  // bg type
+  document.querySelectorAll('input[name="d-bg"]').forEach(radio=>{
+    radio.addEventListener('change',function(){
+      document.querySelectorAll('.bg-opt').forEach(o=>o.classList.remove('sel'));
+      this.closest('.bg-opt').classList.add('sel');
+      document.getElementById('d-bg-img-upload').style.display=this.value==='image'?'block':'none';
+      drawerMark();
+    });
+  });
+
+  document.getElementById('d-bgimg-input').addEventListener('change',function(e){
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(ev){ drawerBgImageUrl=ev.target.result; drawerMark(); };
+    reader.readAsDataURL(file);
+  });
+
+  // ícones
+  function criarIconItem(id,ic){
+    ic=ic||{};
+    const item=document.createElement('div');
+    item.className='icon-item'; item.dataset.id=id;
+    item.innerHTML=`
+      <div class="icon-img-btn" title="Clique para enviar imagem">
+        <input type="file" accept="image/*" class="icon-file"/>
+        <span class="plus">🖼</span>
+        <img src="${ic.imgUrl||''}" alt="" class="${ic.imgUrl?'visible':''}"/>
+      </div>
+      <div class="icon-fields">
+        <input type="text" class="icon-lbl" placeholder="Nome do ícone" value="${ic.label||''}" maxlength="28"/>
+        <input type="url" class="icon-url" placeholder="https://..." value="${ic.url||''}"/>
+      </div>
+      <button class="btn-rm-icon" title="Remover">✕</button>`;
+
+    if(ic.imgUrl) item.querySelector('.plus').style.display='none';
+
+    item.querySelector('.icon-file').addEventListener('change',function(e){
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=function(ev){
+        const img=item.querySelector('img'); img.src=ev.target.result; img.classList.add('visible');
+        item.querySelector('.plus').style.display='none';
+        updateDrawerIcon(id,{imgUrl:ev.target.result}); drawerMark();
+      };
+      reader.readAsDataURL(file);
+    });
+    item.querySelector('.icon-lbl').addEventListener('input',function(){ updateDrawerIcon(id,{label:this.value}); drawerMark(); });
+    item.querySelector('.icon-url').addEventListener('input',function(){ updateDrawerIcon(id,{url:this.value}); drawerMark(); });
+    item.querySelector('.btn-rm-icon').addEventListener('click',function(){ drawerIcons=drawerIcons.filter(i=>i.id!==id); item.remove(); drawerMark(); });
+    return item;
+  }
+
+  function updateDrawerIcon(id,patch){ const ic=drawerIcons.find(i=>i.id===id); if(ic) Object.assign(ic,patch); }
+
+  document.getElementById('d-btn-add-icon').addEventListener('click',function(){
+    const id=++drawerIconCounter;
+    drawerIcons.push({id,label:'',url:'',imgUrl:null});
+    document.getElementById('d-icons-list').appendChild(criarIconItem(id,{}));
+    drawerMark();
+  });
+
+  // salvar drawer
+  document.getElementById('d-btn-salvar').addEventListener('click',async function(){
+    if(!drawerRevId) return;
+    this.disabled=true; this.textContent='Salvando…';
+    try {
+      const bgType=document.querySelector('input[name="d-bg"]:checked')?.value||'solid';
+      const payload={
+        nome_marca: document.getElementById('d-nome').value.trim(),
+        tagline:    document.getElementById('d-tagline').value.trim(),
+        suporte_url:document.getElementById('d-suporte').value.trim(),
+        logo_url:   drawerLogoUrl,
+        cor_fundo:  document.getElementById('d-color-bg').value,
+        cor_destaque:document.getElementById('d-color-accent').value,
+        bg_type:    bgType,
+        bg_image_url:drawerBgImageUrl,
+        icones:     drawerIcons.map(ic=>({label:ic.label,url:ic.url,imgUrl:ic.imgUrl}))
+      };
+      await sbFetch(`revendedores?id=eq.${drawerRevId}`,{method:'PATCH',body:JSON.stringify(payload)});
+      drawerUnsaved=false;
+      document.getElementById('d-hint').textContent='Salvo agora mesmo';
+      document.getElementById('d-hint').classList.remove('unsaved');
+      showToast('✓ Personalização salva');
+      carregarDados();
+    } catch(err){ showToast('❌ Erro: '+err.message,true); }
+    finally { this.disabled=false; this.textContent='Salvar personalização'; }
+  });
 
   // ── INIT ──
-  if (sessionStorage.getItem('admin_session')) {
-    mostrarAdmin();
-  }
+  if(sessionStorage.getItem('admin_session')) mostrarAdmin();
 
 })();
 </script>

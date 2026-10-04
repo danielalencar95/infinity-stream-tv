@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Painel do Gestor — Infinity Stream TV</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0612;
+    --surface: #110c1e;
+    --surface2: #1a1230;
+    --border: rgba(255,255,255,0.07);
+    --accent: #b565ff;
+    --accent-dim: rgba(181,101,255,0.15);
+    --accent-glow: rgba(181,101,255,0.3);
+    --text: #f0eafa;
+    --muted: rgba(240,234,250,0.45);
+    --danger: #ff5e5e;
+    --success: #4ade80;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .topbar-brand span {
+    color: var(--accent);
+  }
+  .topbar-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid rgba(181,101,255,0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8a35cc, var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .gestor-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ── LAYOUT ── */
+  .app-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 61px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 12px 8px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-group-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 10px 10px 4px;
+    margin-top: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    user-select: none;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+  }
+  .nav-item:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+  }
+  .nav-item.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .nav-item.danger { color: rgba(255,94,94,0.6); }
+  .nav-item.danger:hover { background: rgba(255,94,94,0.08); color: var(--danger); }
+
+  .sidebar-footer {
+    padding: 12px 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+  }
+  .sidebar-user-info { flex: 1; min-width: 0; }
+  .sidebar-user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar-user-role {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* Pages */
+  .page { display: none; flex: 1; overflow: hidden; }
+  .page.active { display: flex; }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── EDITOR (esquerda) ── */
+  .editor {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    height: calc(100vh - 61px);
+  }
+
+  .editor-section {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .editor-section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── UPLOAD LOGO ── */
+  .logo-upload-area {
+    border: 2px dashed rgba(181,101,255,0.25);
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-upload-area:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .logo-upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .logo-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    object-fit: contain;
+    background: var(--surface2);
+    display: none;
+    margin: 0 auto 10px;
+  }
+  .logo-preview.visible { display: block; }
+  .upload-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(181,101,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 18px;
+  }
+  .upload-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .upload-text strong { color: var(--accent); font-weight: 600; }
+
+  /* ── NOME DA MARCA ── */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .field input[type="text"],
+  .field input[type="url"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  /* ── CORES ── */
+  .color-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .color-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .color-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .color-picker-wrap:focus-within {
+    border-color: var(--accent);
+  }
+  .color-picker-wrap input[type="color"] {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0;
+    background: none;
+    outline: none;
+  }
+  .color-hex {
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Inter', monospace;
+    flex: 1;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bg-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+  }
+  .bg-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .bg-option input[type="radio"] { display: none; }
+  .bg-thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .bg-option-info { flex: 1; }
+  .bg-option-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .bg-option-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .bg-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: transparent;
+    transition: all .2s;
+  }
+  .bg-option.selected .bg-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ── ÍCONES ── */
+  .icons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .icon-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color .2s;
+  }
+  .icon-item:focus-within {
+    border-color: rgba(181,101,255,0.3);
+  }
+  .icon-item-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .icon-img-upload {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: rgba(181,101,255,0.07);
+    border: 1.5px dashed rgba(181,101,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    transition: border-color .2s, background .2s, transform .15s;
+  }
+  .icon-img-upload:hover {
+    border-color: var(--accent);
+    background: rgba(181,101,255,0.12);
+    transform: scale(1.04);
+  }
+  .icon-img-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .icon-img-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  .icon-img-upload img.visible { display: block; }
+  .icon-img-upload .plus-icon { pointer-events: none; color: var(--muted); font-style: normal; font-size: 20px; }
+  .icon-fields { flex: 1; display: flex; flex-direction: column; gap: 7px; }
+  .icon-fields input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 11px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .icon-fields input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .icon-fields input::placeholder { color: var(--muted); }
+  .icon-item-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: -4px;
+  }
+  .btn-remove-icon {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 15px;
+    line-height: 1;
+    transition: color .2s, background .2s;
+    align-self: flex-start;
+    margin-top: -2px;
+  }
+  .btn-remove-icon:hover { color: var(--danger); background: rgba(255,94,94,0.1); }
+
+  .btn-add-icon {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1.5px dashed rgba(181,101,255,0.25);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-add-icon:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+
+  /* ── SAVE BAR ── */
+  .save-bar {
+    padding: 16px 24px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    position: sticky;
+    bottom: 0;
+  }
+  .save-hint {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .save-hint.changed { color: rgba(250,204,21,0.8); }
+  .btn-save {
+    padding: 10px 22px;
+    background: linear-gradient(90deg, #8a35cc, var(--accent));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s, transform .1s;
+  }
+  .btn-save:hover { opacity: 0.9; }
+  .btn-save:active { transform: scale(0.98); }
+  .btn-save:disabled { opacity: 0.4; cursor: default; }
+
+  /* ── PREVIEW (direita) ── */
+  .preview-pane {
+    background: #070410;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 61px);
+    overflow: hidden;
+  }
+  .preview-header {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .preview-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .preview-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .preview-url {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-family: monospace;
+  }
+  .preview-frame {
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .client-preview {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ── ÁREA DO CLIENTE (preview interno) ── */
+  .cp-header {
+    padding: 28px 24px 20px;
+    text-align: center;
+    background: var(--preview-bg, #0a0612);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .cp-logo-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.07);
+    margin: 0 auto 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .cp-logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+  }
+  .cp-logo-wrap img.visible { display: block; }
+  .cp-brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .cp-tagline {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+  }
+  .cp-body {
+    padding: 20px;
+    background: var(--preview-bg, #0a0612);
+    min-height: 300px;
+  }
+  .cp-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .cp-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 26px 14px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .2s cubic-bezier(.34,1.56,.64,1), background .2s, border-color .2s, box-shadow .2s;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cp-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(181,101,255,0.12) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .cp-card:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(181,101,255,0.28);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(181,101,255,0.1);
+  }
+  .cp-card:hover::before { opacity: 1; }
+  .cp-card:active { transform: scale(0.97); }
+  .cp-card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .cp-card:hover .cp-card-icon {
+    transform: scale(1.08) translateY(-2px);
+  }
+  .cp-card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .cp-card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.88);
+    line-height: 1.35;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.01em;
+  }
+  .cp-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.25);
+    font-size: 13px;
+  }
+  .cp-empty-icon { font-size: 36px; margin-bottom: 8px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(181,101,255,0.2); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(181,101,255,0.4); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid rgba(74,222,128,0.3);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--success);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .workspace { grid-template-columns: 1fr; }
+    .preview-pane { display: none; }
+    .editor { height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+    </svg>
+    Infinity Stream <span>TV</span>
+    <span class="topbar-badge">Gestor</span>
+  </div>
+  <div class="topbar-right">
+    <div class="gestor-name" id="topbar-gestor-name">Minha Marca</div>
+    <div class="avatar" id="topbar-avatar">M</div>
+  </div>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-nav">
+
+    <div class="nav-group-label">Menu</div>
+
+    <button class="nav-item" data-page="inicio">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </span>
+      Início
+    </button>
+
+    <button class="nav-item active" data-page="personalizacao">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </span>
+      Personalização
+    </button>
+
+    <button class="nav-item" data-page="clientes">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </span>
+      Clientes
+    </button>
+
+    <button class="nav-item" data-page="planos">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      </span>
+      Planos
+    </button>
+
+    <button class="nav-item" data-page="suporte">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </span>
+      Suporte
+    </button>
+
+    <button class="nav-item" data-page="configuracoes">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </span>
+      Configurações
+    </button>
+
+    <div style="flex:1;"></div>
+
+    <button class="nav-item danger" data-page="sair">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </span>
+      Sair
+    </button>
+
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="avatar" style="width:30px;height:30px;font-size:12px;" id="sidebar-avatar">M</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Minha Marca</div>
+        <div class="sidebar-user-role">Gestor</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGES -->
+
+<!-- PAGE: INÍCIO -->
+<div class="page" id="page-inicio" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
+  <div style="max-width:700px;">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Bem-vindo 👋</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Veja um resumo da sua operação.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Clientes ativos</div>
+        <div style="font-size:28px;font-weight:700;color:var(--text);">0</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Planos ativos</div>
+        <div style="font-size:28px;font-weight:700;color:var(--text);">0</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Tickets abertos</div>
+        <div style="font-size:28px;font-weight:700;color:var(--text);">0</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:10px;">📊</div>
+      Dashboard em construção — os dados aparecerão aqui após integração com o Supabase.
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PERSONALIZAÇÃO -->
+<div class="page active" id="page-personalizacao" style="flex:1;overflow:hidden;display:flex;">
+<div class="workspace">
+
+  <!-- EDITOR -->
+  <div class="editor">
+
+    <!-- IDENTIDADE -->
+    <div class="editor-section">
+      <div class="section-label">Identidade</div>
+
+      <div class="logo-upload-area" id="logo-upload-area">
+        <input type="file" id="logo-input" accept="image/*"/>
+        <img class="logo-preview" id="logo-preview-img" src="" alt="Logo"/>
+        <div class="upload-icon" id="upload-icon-placeholder">🖼️</div>
+        <div class="upload-text">
+          <strong>Clique para enviar sua logo</strong><br>
+          PNG, SVG ou JPG — ideal 200×200px
+        </div>
+      </div>
+
+      <div style="margin-top: 14px;">
+        <div class="field">
+          <label>Nome da marca</label>
+          <input type="text" id="brand-name" placeholder="Ex: Stream Plus" value="Minha Marca"/>
+        </div>
+        <div class="field">
+          <label>Tagline (opcional)</label>
+          <input type="text" id="brand-tagline" placeholder="Ex: Entretenimento sem limites"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORES -->
+    <div class="editor-section">
+      <div class="section-label">Cores</div>
+      <div class="color-row">
+        <div class="color-field">
+          <label>Cor de fundo</label>
+          <div class="color-picker-wrap">
+            <input type="color" id="color-bg" value="#0a0612"/>
+            <span class="color-hex" id="color-bg-hex">#0a0612</span>
+          </div>
+        </div>
+        <div class="color-field">
+          <label>Cor de destaque</label>
+          <div class="color-picker-wrap">
+            <input type="color" id="color-accent" value="#b565ff"/>
+            <span class="color-hex" id="color-accent-hex">#b565ff</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BACKGROUND -->
+    <div class="editor-section">
+      <div class="section-label">Fundo da área do cliente</div>
+      <div class="bg-options">
+        <label class="bg-option selected" id="bg-opt-solid">
+          <input type="radio" name="bg-type" value="solid" checked/>
+          <div class="bg-thumb" id="bg-thumb-solid" style="background:#0a0612;"></div>
+          <div class="bg-option-info">
+            <div class="bg-option-name">Cor sólida</div>
+            <div class="bg-option-desc">Usa a cor de fundo escolhida</div>
+          </div>
+          <div class="bg-check">✓</div>
+        </label>
+
+        <label class="bg-option" id="bg-opt-gradient">
+          <input type="radio" name="bg-type" value="gradient"/>
+          <div class="bg-thumb" id="bg-thumb-gradient" style="background: linear-gradient(135deg,#0a0612,#1a0830);"></div>
+          <div class="bg-option-info">
+            <div class="bg-option-name">Gradiente suave</div>
+            <div class="bg-option-desc">Gradiente entre o fundo e a cor de destaque</div>
+          </div>
+          <div class="bg-check">✓</div>
+        </label>
+
+        <label class="bg-option" id="bg-opt-image">
+          <input type="radio" name="bg-type" value="image"/>
+          <div class="bg-thumb" style="background: linear-gradient(135deg, rgba(181,101,255,0.2), rgba(10,6,18,0.9)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><rect fill=%22%23150f22%22 width=%2240%22 height=%2240%22/><circle fill=%22%23b565ff22%22 cx=%2220%22 cy=%2220%22 r=%228%22/></svg>'); background-size: cover;"></div>
+          <div class="bg-option-info">
+            <div class="bg-option-name">Imagem personalizada</div>
+            <div class="bg-option-desc">Upload de imagem de fundo</div>
+          </div>
+          <div class="bg-check">✓</div>
+        </label>
+      </div>
+
+      <div id="bg-image-upload" style="display:none; margin-top:12px;">
+        <label class="logo-upload-area" style="padding:16px;">
+          <input type="file" id="bgimage-input" accept="image/*"/>
+          <div class="upload-text">
+            <strong>Enviar imagem de fundo</strong><br>
+            Recomendado: 1280×720px ou maior
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ÍCONES -->
+    <div class="editor-section">
+      <div class="section-label">Ícones e links</div>
+
+      <div class="icons-list" id="icons-list"></div>
+
+      <button class="btn-add-icon" id="btn-add-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar ícone
+      </button>
+    </div>
+
+    <!-- SAVE BAR -->
+    <div class="save-bar">
+      <span class="save-hint changed" id="save-hint">● Alterações não salvas</span>
+      <button class="btn-save" id="btn-save">Salvar configurações</button>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-pane">
+    <div class="preview-header">
+      <div class="preview-label">
+        <div class="preview-dot"></div>
+        Preview da área do cliente
+      </div>
+      <div class="preview-url" id="preview-url">infinity.tv/r/minha-marca</div>
+    </div>
+    <div class="preview-frame">
+      <div class="client-preview" id="client-preview">
+        <div class="cp-header" id="cp-header">
+          <div class="cp-logo-wrap" id="cp-logo-wrap">
+            📺
+            <img id="cp-logo-img" src="" alt=""/>
+          </div>
+          <div class="cp-brand-name" id="cp-brand-name">Minha Marca</div>
+          <div class="cp-tagline" id="cp-tagline"></div>
+        </div>
+        <div class="cp-body" id="cp-body">
+          <div class="cp-grid" id="cp-grid">
+            <div class="cp-empty">
+              <div class="cp-empty-icon">🔲</div>
+              Adicione ícones para visualizar aqui
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim .workspace -->
+</div><!-- fim #page-personalizacao -->
+
+<!-- PAGE: CLIENTES -->
+<div class="page" id="page-clientes" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
+  <div style="max-width:800px;">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Clientes</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Gerencie os clientes da sua revenda.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:10px;">👥</div>
+      Lista de clientes disponível após integração com o Supabase.
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PLANOS -->
+<div class="page" id="page-planos" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
+  <div style="max-width:700px;">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Planos</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Configure os planos oferecidos aos seus clientes.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:10px;">💳</div>
+      Configuração de planos disponível em breve.
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: SUPORTE -->
+<div class="page" id="page-suporte" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
+  <div style="max-width:700px;">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Suporte</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Tickets e mensagens dos seus clientes.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:10px;">💬</div>
+      Central de suporte disponível em breve.
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: CONFIGURAÇÕES -->
+<div class="page" id="page-configuracoes" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
+  <div style="max-width:600px;">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Configurações</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Dados da conta e preferências.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:10px;">⚙️</div>
+      Configurações de conta disponíveis em breve.
+    </div>
+  </div>
+</div>
+
+</div><!-- fim .app-body -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span>✓</span>
+  <span id="toast-msg">Configurações salvas com sucesso</span>
+</div>
+
+<script>
+(function(){
+
+  // ── SUPABASE CONFIG ──
+  const SUPABASE_URL = 'https://hxptaygjtvyyteyqlpeb.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4cHRheWdqdHZ5eXRleXFscGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNzAxNjEsImV4cCI6MjEwNjY0NjE2MX0.dYAIcixEYEUuxfeFUmoOqTNX0MoO17yKfEdz6K4wZL0';
+
+  async function sbFetch(path, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || 'return=representation',
+        ...(options.headers || {})
+      },
+      ...options
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  // ── STATE ──
+  const state = {
+    revendedorId: null,   // UUID do registro no Supabase
+    slug: '',
+    logoDataUrl: null,
+    brandName: 'Minha Marca',
+    tagline: '',
+    colorBg: '#0a0612',
+    colorAccent: '#b565ff',
+    bgType: 'solid',
+    bgImageUrl: null,
+    icons: []
+  };
+
+  let iconIdCounter = 0;
+
+  // ── HELPERS ──
+  function slugify(str) {
+    return str.toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .slice(0, 30) || 'minha-marca';
+  }
+
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `${r},${g},${b}`;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg || 'Salvo!';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ── LOGO UPLOAD ──
+  document.getElementById('logo-input').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      state.logoDataUrl = ev.target.result;
+      const prev = document.getElementById('logo-preview-img');
+      prev.src = ev.target.result;
+      prev.classList.add('visible');
+      document.getElementById('upload-icon-placeholder').style.display = 'none';
+
+      const cpImg = document.getElementById('cp-logo-img');
+      cpImg.src = ev.target.result;
+      cpImg.classList.add('visible');
+      document.querySelector('#cp-logo-wrap .cp-logo-wrap > :not(img)') && null;
+      document.querySelector('#cp-logo-wrap').firstChild.textContent = '';
+      markChanged();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── BRAND NAME ──
+  document.getElementById('brand-name').addEventListener('input', function(){
+    state.brandName = this.value;
+    document.getElementById('cp-brand-name').textContent = this.value || 'Minha Marca';
+    document.getElementById('topbar-gestor-name').textContent = this.value || 'Minha Marca';
+    document.getElementById('topbar-avatar').textContent = (this.value || 'M')[0].toUpperCase();
+    document.getElementById('preview-url').textContent = `infinity.tv/r/${slugify(this.value)}`;
+    markChanged();
+  });
+
+  document.getElementById('brand-tagline').addEventListener('input', function(){
+    state.tagline = this.value;
+    const el = document.getElementById('cp-tagline');
+    el.textContent = this.value;
+    markChanged();
+  });
+
+  // ── CORES ──
+  document.getElementById('color-bg').addEventListener('input', function(){
+    state.colorBg = this.value;
+    document.getElementById('color-bg-hex').textContent = this.value;
+    document.getElementById('bg-thumb-solid').style.background = this.value;
+    updateBgGradientThumb();
+    applyPreviewBg();
+    markChanged();
+  });
+
+  document.getElementById('color-accent').addEventListener('input', function(){
+    state.colorAccent = this.value;
+    document.getElementById('color-accent-hex').textContent = this.value;
+    updateBgGradientThumb();
+    markChanged();
+  });
+
+  function updateBgGradientThumb() {
+    document.getElementById('bg-thumb-gradient').style.background =
+      `linear-gradient(135deg, ${state.colorBg}, ${state.colorAccent}22, ${state.colorBg}dd)`;
+  }
+
+  function applyPreviewBg() {
+    const header = document.getElementById('cp-header');
+    const body = document.getElementById('cp-body');
+
+    if (state.bgType === 'solid') {
+      header.style.background = state.colorBg;
+      body.style.background = state.colorBg;
+    } else if (state.bgType === 'gradient') {
+      const grad = `linear-gradient(160deg, ${state.colorBg} 0%, color-mix(in srgb, ${state.colorAccent} 18%, ${state.colorBg}) 100%)`;
+      header.style.background = grad;
+      body.style.background = state.colorBg;
+    } else if (state.bgType === 'image' && state.bgImageUrl) {
+      const bg = `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url(${state.bgImageUrl})`;
+      header.style.background = bg;
+      header.style.backgroundSize = 'cover';
+      header.style.backgroundPosition = 'center';
+      body.style.background = bg;
+      body.style.backgroundSize = 'cover';
+      body.style.backgroundPosition = 'center';
+    }
+  }
+
+  // ── BG TYPE ──
+  document.querySelectorAll('input[name="bg-type"]').forEach(radio => {
+    radio.addEventListener('change', function(){
+      state.bgType = this.value;
+      document.querySelectorAll('.bg-option').forEach(o => o.classList.remove('selected'));
+      this.closest('.bg-option').classList.add('selected');
+      document.getElementById('bg-image-upload').style.display = this.value === 'image' ? 'block' : 'none';
+      applyPreviewBg();
+      markChanged();
+    });
+  });
+
+  document.getElementById('bgimage-input').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      state.bgImageUrl = ev.target.result;
+      applyPreviewBg();
+      markChanged();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── ÍCONES ──
+  function createIconItem(id) {
+    const item = document.createElement('div');
+    item.className = 'icon-item';
+    item.dataset.id = id;
+    const index = state.icons.length;
+    item.innerHTML = `
+      <div class="icon-item-num">ÍCONE ${index}</div>
+      <div class="icon-item-header">
+        <div class="icon-img-upload" title="Clique para enviar imagem">
+          <input type="file" accept="image/*" class="icon-file-input"/>
+          <span class="plus-icon">🖼</span>
+          <img class="icon-preview" src="" alt=""/>
+        </div>
+        <div class="icon-fields">
+          <input type="text" class="icon-label-input" placeholder="Ex: Ativar Aplicativo" maxlength="28"/>
+          <input type="url" class="icon-url-input" placeholder="https://wa.me/..."/>
+        </div>
+        <button class="btn-remove-icon" title="Remover">✕</button>
+      </div>
+    `;
+
+    // preview imagem
+    item.querySelector('.icon-file-input').addEventListener('change', function(e){
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        const img = item.querySelector('.icon-preview');
+        img.src = ev.target.result;
+        img.classList.add('visible');
+        item.querySelector('.plus-icon').style.display = 'none';
+        updateIconInState(id, { imgUrl: ev.target.result });
+        renderPreviewIcons();
+        markChanged();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    item.querySelector('.icon-label-input').addEventListener('input', function(){
+      updateIconInState(id, { label: this.value });
+      renderPreviewIcons();
+      markChanged();
+    });
+
+    item.querySelector('.icon-url-input').addEventListener('input', function(){
+      updateIconInState(id, { url: this.value });
+      markChanged();
+    });
+
+    item.querySelector('.btn-remove-icon').addEventListener('click', function(){
+      state.icons = state.icons.filter(ic => ic.id !== id);
+      item.remove();
+      renderPreviewIcons();
+      markChanged();
+    });
+
+    return item;
+  }
+
+  function addIcon() {
+    const id = ++iconIdCounter;
+    state.icons.push({ id, imgUrl: null, label: '', url: '' });
+    const list = document.getElementById('icons-list');
+    list.appendChild(createIconItem(id));
+    markChanged();
+  }
+
+  function updateIconInState(id, patch) {
+    const ic = state.icons.find(i => i.id === id);
+    if (ic) Object.assign(ic, patch);
+  }
+
+  function renderPreviewIcons() {
+    const grid = document.getElementById('cp-grid');
+    const validIcons = state.icons.filter(ic => ic.label || ic.imgUrl);
+
+    if (validIcons.length === 0) {
+      grid.innerHTML = `<div class="cp-empty" style="grid-column:1/-1;"><div class="cp-empty-icon">🔲</div>Adicione ícones para visualizar aqui</div>`;
+      return;
+    }
+
+    grid.innerHTML = '';
+    validIcons.forEach(ic => {
+      const card = document.createElement('a');
+      card.className = 'cp-card';
+      card.href = ic.url || '#';
+      card.target = '_blank';
+
+      const iconEl = document.createElement('div');
+      iconEl.className = 'cp-card-icon';
+      iconEl.style.background = `linear-gradient(135deg, rgba(${hexToRgb(state.colorAccent)},0.18), rgba(${hexToRgb(state.colorAccent)},0.08))`;
+      iconEl.style.border = `1px solid rgba(${hexToRgb(state.colorAccent)},0.2)`;
+
+      if (ic.imgUrl) {
+        const img = document.createElement('img');
+        img.src = ic.imgUrl;
+        img.alt = ic.label;
+        iconEl.appendChild(img);
+      } else {
+        iconEl.textContent = '🔗';
+        iconEl.style.fontSize = '28px';
+      }
+
+      const labelEl = document.createElement('div');
+      labelEl.className = 'cp-card-label';
+      labelEl.textContent = ic.label || 'Sem título';
+
+      card.appendChild(iconEl);
+      card.appendChild(labelEl);
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById('btn-add-icon').addEventListener('click', addIcon);
+
+  // ── SAVE ──
+  function markChanged() {
+    document.getElementById('save-hint').textContent = '● Alterações não salvas';
+    document.getElementById('save-hint').classList.add('changed');
+  }
+
+  async function saveToSupabase() {
+    const btn = document.getElementById('btn-save');
+    btn.textContent = 'Salvando…';
+    btn.disabled = true;
+
+    try {
+      const slug = state.slug || slugify(state.brandName);
+
+      const payload = {
+        slug,
+        nome_marca:   state.brandName,
+        tagline:      state.tagline,
+        logo_url:     state.logoDataUrl,
+        cor_fundo:    state.colorBg,
+        cor_destaque: state.colorAccent,
+        bg_type:      state.bgType,
+        bg_image_url: state.bgImageUrl,
+        icones:       state.icons.map(ic => ({
+          label:  ic.label,
+          imgUrl: ic.imgUrl,
+          url:    ic.url
+        }))
+      };
+
+      if (state.revendedorId) {
+        // atualiza registro existente
+        await sbFetch(`revendedores?id=eq.${state.revendedorId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+          prefer: 'return=representation'
+        });
+      } else {
+        // cria novo registro
+        const data = await sbFetch('revendedores', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          prefer: 'return=representation'
+        });
+        if (data && data[0]) state.revendedorId = data[0].id;
+      }
+
+      state.slug = slug;
+      document.getElementById('save-hint').textContent = 'Salvo agora mesmo';
+      document.getElementById('save-hint').classList.remove('changed');
+      document.getElementById('preview-url').textContent = `infinity.tv/r/${slug}`;
+      showToast('✓ Configurações salvas no Supabase');
+
+    } catch (err) {
+      console.error(err);
+      showToast('❌ Erro ao salvar: ' + err.message);
+    } finally {
+      btn.textContent = 'Salvar configurações';
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById('btn-save').addEventListener('click', saveToSupabase);
+
+  // ── CARREGAR REVENDEDOR (se existir slug na URL ou primeiro registro) ──
+  async function carregarRevendedor() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const slugParam = params.get('slug');
+      let url = 'revendedores?limit=1&order=criado_em.asc';
+      if (slugParam) url = `revendedores?slug=eq.${encodeURIComponent(slugParam)}`;
+
+      const data = await sbFetch(url, { prefer: 'return=representation' });
+      if (!data || data.length === 0) return;
+
+      const r = data[0];
+      state.revendedorId = r.id;
+      state.slug         = r.slug;
+
+      // preenche os campos
+      document.getElementById('brand-name').value    = r.nome_marca || '';
+      document.getElementById('brand-tagline').value = r.tagline || '';
+      document.getElementById('color-bg').value      = r.cor_fundo || '#0a0612';
+      document.getElementById('color-accent').value  = r.cor_destaque || '#b565ff';
+
+      state.brandName   = r.nome_marca || 'Minha Marca';
+      state.tagline     = r.tagline || '';
+      state.colorBg     = r.cor_fundo || '#0a0612';
+      state.colorAccent = r.cor_destaque || '#b565ff';
+      state.bgType      = r.bg_type || 'solid';
+      state.bgImageUrl  = r.bg_image_url || null;
+      state.logoDataUrl = r.logo_url || null;
+
+      // atualiza displays
+      document.getElementById('color-bg-hex').textContent     = state.colorBg;
+      document.getElementById('color-accent-hex').textContent = state.colorAccent;
+      document.getElementById('cp-brand-name').textContent    = state.brandName;
+      document.getElementById('cp-tagline').textContent       = state.tagline;
+      document.getElementById('topbar-gestor-name').textContent = state.brandName;
+      document.getElementById('topbar-avatar').textContent    = state.brandName[0].toUpperCase();
+      document.getElementById('sidebar-user-name').textContent = state.brandName;
+      document.getElementById('sidebar-avatar').textContent   = state.brandName[0].toUpperCase();
+      document.getElementById('preview-url').textContent      = `infinity.tv/r/${state.slug}`;
+
+      // logo
+      if (r.logo_url) {
+        const img = document.getElementById('logo-preview-img');
+        img.src = r.logo_url;
+        img.classList.add('visible');
+        document.getElementById('upload-icon-placeholder').style.display = 'none';
+        const cpImg = document.getElementById('cp-logo-img');
+        cpImg.src = r.logo_url;
+        cpImg.classList.add('visible');
+      }
+
+      // bg type
+      document.querySelectorAll('input[name="bg-type"]').forEach(radio => {
+        if (radio.value === state.bgType) {
+          radio.checked = true;
+          document.querySelectorAll('.bg-option').forEach(o => o.classList.remove('selected'));
+          radio.closest('.bg-option').classList.add('selected');
+        }
+      });
+
+      // ícones
+      if (r.icones && r.icones.length > 0) {
+        r.icones.forEach(ic => {
+          const id = ++iconIdCounter;
+          state.icons.push({ id, imgUrl: ic.imgUrl || null, label: ic.label || '', url: ic.url || '' });
+          const list = document.getElementById('icons-list');
+          const item = createIconItem(id);
+          list.appendChild(item);
+          item.querySelector('.icon-label-input').value = ic.label || '';
+          item.querySelector('.icon-url-input').value   = ic.url || '';
+          if (ic.imgUrl) {
+            const img = item.querySelector('.icon-preview');
+            img.src = ic.imgUrl;
+            img.classList.add('visible');
+            item.querySelector('.plus-icon').style.display = 'none';
+          }
+        });
+        renderPreviewIcons();
+      }
+
+      updateBgGradientThumb();
+      applyPreviewBg();
+
+      document.getElementById('save-hint').textContent = 'Dados carregados do Supabase';
+      document.getElementById('save-hint').classList.remove('changed');
+
+    } catch(err) {
+      console.warn('Nenhum revendedor encontrado ou erro:', err.message);
+    }
+  }
+
+  // ── SIDEBAR NAVIGATION ──
+  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
+    btn.addEventListener('click', function(){
+      const page = this.dataset.page;
+      if (page === 'sair') {
+        if (confirm('Tem certeza que deseja sair?')) {
+          showToast('Sessão encerrada.');
+        }
+        return;
+      }
+
+      // remove active de todos
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      // esconde todas as páginas
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+      });
+
+      // mostra a página correta
+      const target = document.getElementById('page-' + page);
+      if (target) {
+        target.style.display = 'flex';
+        target.classList.add('active');
+      }
+    });
+  });
+
+  // garante estado inicial correto
+  document.querySelectorAll('.page').forEach(p => {
+    if (!p.classList.contains('active')) p.style.display = 'none';
+  });
+
+  // ── SIDEBAR USER SYNC ──
+  document.getElementById('brand-name').addEventListener('input', function(){
+    document.getElementById('sidebar-user-name').textContent = this.value || 'Minha Marca';
+    document.getElementById('sidebar-avatar').textContent = (this.value || 'M')[0].toUpperCase();
+  });
+
+  // ── INIT ──
+  updateBgGradientThumb();
+  applyPreviewBg();
+  carregarRevendedor();
+
+})();
+</script>
+</body>
+</html>

@@ -25,13 +25,18 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html, body {
+    height: 100%;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   /* ── TOPBAR ── */
@@ -95,7 +100,6 @@
     display: flex;
     flex: 1;
     overflow: hidden;
-    height: calc(100vh - 61px);
     min-height: 0;
   }
 
@@ -107,12 +111,8 @@
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    height: 100%;
-    min-height: 0;
     overflow: hidden;
-    position: sticky;
-    top: 0;
-    align-self: stretch;
+    height: 100%;
   }
 
   .sidebar-nav {
@@ -203,8 +203,9 @@
   }
 
   /* Pages */
-  .page { display: none; flex: 1; overflow: hidden; }
-  .page.active { display: flex; }
+  .page { display: none; flex: 1; overflow: auto; min-height: 0; }
+  .page.active { display: flex; flex-direction: column; }
+  .page-inner { width: 100%; max-width: 860px; margin: 0 auto; padding: 32px 32px 48px; }
 
   .workspace {
     display: grid;
@@ -891,8 +892,8 @@
 <!-- PAGES -->
 
 <!-- PAGE: INÍCIO -->
-<div class="page" id="page-inicio" style="flex:1;overflow:auto;background:var(--bg);">
-  <div style="max-width:860px;margin:0 auto;padding:32px 32px 48px;">
+<div class="page" id="page-inicio" style="background:var(--bg);">
+  <div class="page-inner">
 
     <!-- Saudação -->
     <div style="margin-bottom:28px;">
@@ -1128,8 +1129,8 @@
 </div><!-- fim #page-personalizacao -->
 
 <!-- PAGE: CLIENTES -->
-<div class="page" id="page-clientes" style="flex:1;overflow:auto;background:var(--bg);">
-  <div style="max-width:860px;margin:0 auto;padding:32px 32px 48px;">
+<div class="page" id="page-clientes" style="background:var(--bg);">
+  <div class="page-inner">
 
     <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
@@ -1218,36 +1219,36 @@
 </div>
 
 <!-- PAGE: PLANOS -->
-<div class="page" id="page-planos" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
-  <div style="max-width:700px;">
-    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Planos</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Configure os planos oferecidos aos seus clientes.</p>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
-      <div style="font-size:32px;margin-bottom:10px;">💳</div>
+<div class="page" id="page-planos" style="background:var(--bg);">
+  <div class="page-inner">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Planos</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Configure os planos oferecidos aos seus clientes.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:36px;margin-bottom:12px;">💳</div>
       Configuração de planos disponível em breve.
     </div>
   </div>
 </div>
 
 <!-- PAGE: SUPORTE -->
-<div class="page" id="page-suporte" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
-  <div style="max-width:700px;">
-    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Suporte</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Tickets e mensagens dos seus clientes.</p>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
-      <div style="font-size:32px;margin-bottom:10px;">💬</div>
+<div class="page" id="page-suporte" style="background:var(--bg);">
+  <div class="page-inner">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Suporte</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Tickets e mensagens dos seus clientes.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:36px;margin-bottom:12px;">💬</div>
       Central de suporte disponível em breve.
     </div>
   </div>
 </div>
 
 <!-- PAGE: CONFIGURAÇÕES -->
-<div class="page" id="page-configuracoes" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
-  <div style="max-width:600px;">
-    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Configurações</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Dados da conta e preferências.</p>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
-      <div style="font-size:32px;margin-bottom:10px;">⚙️</div>
+<div class="page" id="page-configuracoes" style="background:var(--bg);">
+  <div class="page-inner">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Configurações</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Dados da conta e preferências.</p>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:36px;margin-bottom:12px;">⚙️</div>
       Configurações de conta disponíveis em breve.
     </div>
   </div>
@@ -1722,22 +1723,15 @@
       // esconde todas as páginas
       document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
-        p.style.display = 'none';
       });
 
       // mostra a página correta
       const target = document.getElementById('page-' + page);
-      if (target) {
-        target.style.display = 'flex';
-        target.classList.add('active');
-      }
+      if (target) target.classList.add('active');
     });
   });
 
-  // garante estado inicial correto
-  document.querySelectorAll('.page').forEach(p => {
-    if (!p.classList.contains('active')) p.style.display = 'none';
-  });
+  // garante estado inicial correto — CSS cuida do display via .active
 
   // ── DASHBOARD INÍCIO ──
   async function carregarDashboard() {

@@ -195,24 +195,34 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); overflow: hidden;
   }
-  table { width: 100%; border-collapse: collapse; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   thead tr { background: rgba(255,255,255,.02); border-bottom: 1px solid var(--border); }
-  th { padding: 12px 20px; text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-  td { padding: 14px 20px; font-size: 13px; border-top: 1px solid var(--border); }
+  th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; overflow: hidden; }
+  td { padding: 12px 14px; font-size: 13px; border-top: 1px solid var(--border); overflow: hidden; }
   tbody tr { transition: background .15s; }
   tbody tr:hover { background: rgba(255,255,255,.02); }
-  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+
+  /* larguras fixas das colunas */
+  col.col-marca   { width: 22%; }
+  col.col-slug    { width: 14%; }
+  col.col-email   { width: 22%; }
+  col.col-cli     { width: 8%; }
+  col.col-status  { width: 9%; }
+  col.col-acoes   { width: 25%; }
+
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
   .badge-ativo { background: rgba(74,222,128,.1); color: #4ade80; border: 1px solid rgba(74,222,128,.2); }
   .badge-inativo { background: rgba(255,94,94,.1); color: #ff5e5e; border: 1px solid rgba(255,94,94,.2); }
-  .actions { display: flex; align-items: center; gap: 6px; }
+  .actions { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; }
   .btn-action {
-    padding: 5px 10px; background: transparent; border: 1px solid var(--border);
-    border-radius: 6px; color: var(--muted); font-size: 12px; cursor: pointer;
+    padding: 4px 9px; background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); font-size: 11px; cursor: pointer;
     font-family: 'Inter', sans-serif; transition: color .2s, border-color .2s;
+    white-space: nowrap; flex-shrink: 0;
   }
   .btn-action:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
   .btn-action.danger:hover { color: var(--danger); border-color: rgba(255,94,94,.3); }
-  .btn-action.accent { color: var(--accent); border-color: rgba(181,101,255,.3); }
+  .btn-action.accent { color: var(--accent); border-color: rgba(181,101,255,.3); font-weight: 600; }
   .btn-action.accent:hover { background: var(--accent-dim); }
   .busca-wrap { position: relative; margin-bottom: 14px; }
   .busca-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: .4; pointer-events: none; }
@@ -573,10 +583,14 @@
     <!-- Tabela -->
     <div class="table-wrap">
       <table>
+        <colgroup>
+          <col class="col-marca"/><col class="col-slug"/><col class="col-email"/>
+          <col class="col-cli"/><col class="col-status"/><col class="col-acoes"/>
+        </colgroup>
         <thead>
           <tr>
-            <th>Marca</th><th>Slug / URL</th><th>E-mail</th>
-            <th>Clientes</th><th>Status</th><th style="text-align:right;">Ações</th>
+            <th>Marca</th><th>Slug</th><th>E-mail</th>
+            <th style="text-align:center;">Cli.</th><th>Status</th><th style="text-align:right;">Ações</th>
           </tr>
         </thead>
         <tbody id="rev-tbody">
@@ -807,11 +821,11 @@
       return `<tr>
         <td><div style="font-weight:600;">${r.nome_marca}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${r.tagline||''}</div></td>
         <td><code style="font-size:12px;background:var(--surface2);padding:2px 8px;border-radius:5px;color:var(--accent);">${r.slug}</code></td>
-        <td style="color:var(--muted);">${r.email||'—'}</td>
+        <td style="color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0;">${r.email||'—'}</td>
         <td style="text-align:center;">${qtd}</td>
         <td><span class="badge ${r.ativo?'badge-ativo':'badge-inativo'}">${r.ativo?'Ativo':'Inativo'}</span></td>
         <td><div class="actions" style="justify-content:flex-end;">
-          <button class="btn-action accent" onclick="abrirDrawer('${r.id}')">✏️ Personalizar</button>
+          <button class="btn-action accent" onclick="abrirDrawer('${r.id}')">✏️ Design</button>
           <button class="btn-action" onclick="editarRevBasico('${r.id}')">Editar</button>
           <button class="btn-action ${r.ativo?'danger':''}" onclick="toggleRev('${r.id}',${r.ativo})">${r.ativo?'Desativar':'Ativar'}</button>
         </div></td>

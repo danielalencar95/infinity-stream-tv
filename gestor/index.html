@@ -1333,26 +1333,60 @@
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
-  // ── LOGO UPLOAD ──
-  document.getElementById('logo-input').addEventListener('change', function(e){
+  // ── LOGO UPLOAD → Supabase Storage ──
+  document.getElementById('logo-input').addEventListener('change', async function(e){
     const file = e.target.files[0];
     if (!file) return;
+
+    // preview imediato local enquanto faz upload
     const reader = new FileReader();
     reader.onload = function(ev){
-      state.logoDataUrl = ev.target.result;
       const prev = document.getElementById('logo-preview-img');
       prev.src = ev.target.result;
       prev.classList.add('visible');
       document.getElementById('upload-icon-placeholder').style.display = 'none';
-
       const cpImg = document.getElementById('cp-logo-img');
       cpImg.src = ev.target.result;
       cpImg.classList.add('visible');
-      document.querySelector('#cp-logo-wrap .cp-logo-wrap > :not(img)') && null;
       document.querySelector('#cp-logo-wrap').firstChild.textContent = '';
-      markChanged();
     };
     reader.readAsDataURL(file);
+
+    // upload para Supabase Storage
+    try {
+      const ext = file.name.split('.').pop();
+      const slug = state.slug || slugify(state.brandName) || 'logo';
+      const fileName = `${slug}-${Date.now()}.${ext}`;
+
+      const res = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/logos/${fileName}`,
+        {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': file.type,
+            'x-upsert': 'true'
+          },
+          body: file
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+
+      // monta URL pública
+      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/logos/${fileName}`;
+      state.logoDataUrl = publicUrl;
+      showToast('✓ Logo enviada com sucesso');
+      markChanged();
+
+    } catch(err) {
+      console.error('Upload logo:', err);
+      showToast('❌ Erro no upload: ' + err.message);
+    }
   });
 
   // ── BRAND NAME ──

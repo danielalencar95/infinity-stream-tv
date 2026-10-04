@@ -393,6 +393,45 @@
   .drawer-hint { font-size: 12px; color: var(--muted); }
   .drawer-hint.unsaved { color: rgba(250,204,21,.8); }
 
+  /* ── MODAL CREDENCIAIS ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.65);
+    z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%; max-width: 480px;
+    padding: 24px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.6);
+    animation: modalIn .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes modalIn { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .modal-sub { font-size: 12px; color: var(--muted); }
+  .cred-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 2;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .cred-block .cred-label { color: var(--muted); font-size: 11px; }
+  .cred-block .cred-val { color: var(--accent); font-weight: 600; }
+
   /* ── TOAST ── */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
@@ -653,6 +692,24 @@
   </div>
 </div>
 
+<!-- MODAL CREDENCIAIS -->
+<div class="modal-overlay" id="cred-overlay" style="display:none;">
+  <div class="modal-box" id="cred-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">✅ Revendedor criado!</div>
+        <div class="modal-sub">Envie as informações abaixo para o gestor</div>
+      </div>
+      <button class="btn-fechar" id="cred-close">✕</button>
+    </div>
+    <div class="cred-block" id="cred-block"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn-cancelar" id="cred-close2">Fechar</button>
+      <button class="btn-salvar" id="cred-copy">📋 Copiar tudo</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast">✓ <span id="toast-msg"></span></div>
 
@@ -805,7 +862,9 @@
       } else {
         payload.ativo=true;
         await sbFetch('revendedores',{method:'POST',body:JSON.stringify(payload)});
-        showToast('Revendedor criado com sucesso');
+        fecharForm(); carregarDados();
+        abrirModalCredenciais({nome,slug,email,senha});
+        return;
       }
       fecharForm(); carregarDados();
     } catch(err){
@@ -1036,6 +1095,50 @@
       carregarDados();
     } catch(err){ showToast('❌ Erro: '+err.message,true); }
     finally { this.disabled=false; this.textContent='Salvar personalização'; }
+  });
+
+  // ── MODAL CREDENCIAIS ──
+  const BASE = 'https://infinity-stream-tv-gestor.vercel.app';
+
+  function abrirModalCredenciais({nome, slug, email, senha}) {
+    const linkGestor  = `${BASE}/gestor/`;
+    const linkCliente = `${BASE}/cliente/?r=${slug}`;
+
+    const texto = `🏷️ Marca: ${nome}
+📧 E-mail: ${email}
+🔑 Senha: ${senha}
+
+🖥️ Painel do gestor:
+${linkGestor}
+
+🌐 Área dos seus clientes:
+${linkCliente}`;
+
+    document.getElementById('cred-block').innerHTML =
+      `<span class="cred-label">Marca</span>\n<span class="cred-val">${nome}</span>\n\n` +
+      `<span class="cred-label">E-mail</span>\n<span class="cred-val">${email}</span>\n\n` +
+      `<span class="cred-label">Senha</span>\n<span class="cred-val">${senha}</span>\n\n` +
+      `<span class="cred-label">Painel do gestor</span>\n<span class="cred-val">${linkGestor}</span>\n\n` +
+      `<span class="cred-label">Área dos clientes</span>\n<span class="cred-val">${linkCliente}</span>`;
+
+    document.getElementById('cred-overlay').style.display = 'flex';
+
+    document.getElementById('cred-copy').onclick = function() {
+      navigator.clipboard.writeText(texto).then(() => {
+        this.textContent = '✓ Copiado!';
+        setTimeout(() => this.textContent = '📋 Copiar tudo', 2000);
+      });
+    };
+  }
+
+  function fecharModalCredenciais() {
+    document.getElementById('cred-overlay').style.display = 'none';
+  }
+
+  document.getElementById('cred-close').addEventListener('click', fecharModalCredenciais);
+  document.getElementById('cred-close2').addEventListener('click', fecharModalCredenciais);
+  document.getElementById('cred-overlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharModalCredenciais();
   });
 
   // ── INIT ──

@@ -676,6 +676,8 @@
     display: none;
   }
   .cp-logo-wrap img.visible { display: block; }
+  .cp-logo-wrap img.visible ~ .cp-logo-placeholder { display: none; }
+  .cp-logo-wrap:has(img.visible) .cp-logo-placeholder { display: none; }
   .cp-brand-name {
     font-size: 20px;
     font-weight: 700;
@@ -1113,7 +1115,7 @@
       <div class="client-preview" id="client-preview">
         <div class="cp-header" id="cp-header">
           <div class="cp-logo-wrap" id="cp-logo-wrap">
-            📺
+            <span class="cp-logo-placeholder">📺</span>
             <img id="cp-logo-img" src="" alt=""/>
           </div>
           <div class="cp-brand-name" id="cp-brand-name">Minha Marca</div>
@@ -1348,7 +1350,6 @@
       const cpImg = document.getElementById('cp-logo-img');
       cpImg.src = ev.target.result;
       cpImg.classList.add('visible');
-      document.querySelector('#cp-logo-wrap').firstChild.textContent = '';
     };
     reader.readAsDataURL(file);
 

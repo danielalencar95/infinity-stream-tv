@@ -1066,13 +1066,72 @@
 
 <!-- PAGE: CLIENTES -->
 <div class="page" id="page-clientes" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
-  <div style="max-width:800px;">
-    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Clientes</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Gerencie os clientes da sua revenda.</p>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
-      <div style="font-size:32px;margin-bottom:10px;">👥</div>
-      Lista de clientes disponível após integração com o Supabase.
+  <div style="max-width:860px;">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h2 style="font-size:20px;font-weight:700;margin-bottom:4px;">Clientes</h2>
+        <p style="color:var(--muted);font-size:13px;" id="clientes-count">Carregando…</p>
+      </div>
+      <button id="btn-novo-cliente" style="display:flex;align-items:center;gap:7px;padding:9px 18px;background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:opacity .2s;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo cliente
+      </button>
     </div>
+
+    <!-- Modal novo cliente -->
+    <div id="modal-cliente" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <span style="font-size:15px;font-weight:600;" id="modal-titulo">Novo cliente</span>
+        <button id="btn-fechar-modal" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;line-height:1;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12px;color:var(--muted);font-weight:500;">Nome</label>
+          <input id="cli-nome" type="text" placeholder="Ex: João Silva" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--text);font-family:Inter,sans-serif;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12px;color:var(--muted);font-weight:500;">E-mail</label>
+          <input id="cli-email" type="email" placeholder="cliente@email.com" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--text);font-family:Inter,sans-serif;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:12px;color:var(--muted);font-weight:500;">Senha</label>
+          <input id="cli-senha" type="text" placeholder="Senha de acesso" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-size:13px;color:var(--text);font-family:Inter,sans-serif;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:8px;">
+          <button id="btn-cancelar-cliente" style="flex:1;padding:9px;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;transition:border-color .2s,color .2s;">Cancelar</button>
+          <button id="btn-salvar-cliente" style="flex:2;padding:9px;background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;transition:opacity .2s;">Salvar</button>
+        </div>
+      </div>
+      <div id="cli-erro" style="display:none;margin-top:12px;font-size:12px;color:#ff6b6b;"></div>
+    </div>
+
+    <!-- Busca -->
+    <div style="position:relative;margin-bottom:16px;">
+      <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="cli-busca" type="text" placeholder="Buscar por nome ou e-mail…" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px 9px 34px;font-size:13px;color:var(--text);font-family:Inter,sans-serif;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+    </div>
+
+    <!-- Tabela -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;" id="clientes-tabela">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="padding:12px 16px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Nome</th>
+            <th style="padding:12px 16px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">E-mail</th>
+            <th style="padding:12px 16px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Status</th>
+            <th style="padding:12px 16px;text-align:right;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="clientes-tbody">
+          <tr>
+            <td colspan="4" style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">Carregando clientes…</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
 
@@ -1596,6 +1655,171 @@
   // garante estado inicial correto
   document.querySelectorAll('.page').forEach(p => {
     if (!p.classList.contains('active')) p.style.display = 'none';
+  });
+
+  // ── CLIENTES ──
+  let todosClientes = [];
+  let clienteEditandoId = null;
+
+  async function carregarClientes() {
+    if (!state.revendedorId) return;
+    try {
+      const data = await sbFetch(`clientes?revendedor_id=eq.${state.revendedorId}&order=criado_em.desc`);
+      todosClientes = data || [];
+      renderClientes(todosClientes);
+      document.getElementById('clientes-count').textContent =
+        `${todosClientes.length} cliente${todosClientes.length !== 1 ? 's' : ''} cadastrado${todosClientes.length !== 1 ? 's' : ''}`;
+    } catch(err) {
+      document.getElementById('clientes-tbody').innerHTML =
+        `<tr><td colspan="4" style="padding:32px;text-align:center;color:#ff6b6b;font-size:13px;">Erro ao carregar: ${err.message}</td></tr>`;
+    }
+  }
+
+  function renderClientes(lista) {
+    const tbody = document.getElementById('clientes-tbody');
+    if (!lista || lista.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">
+        <div style="font-size:32px;margin-bottom:8px;">👥</div>Nenhum cliente cadastrado ainda.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = lista.map(c => `
+      <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+        <td style="padding:14px 16px;font-size:13px;font-weight:500;color:var(--text);">${c.nome || '—'}</td>
+        <td style="padding:14px 16px;font-size:13px;color:var(--muted);">${c.email}</td>
+        <td style="padding:14px 16px;text-align:center;">
+          <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;${c.ativo
+            ? 'background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);'
+            : 'background:rgba(255,94,94,0.1);color:#ff5e5e;border:1px solid rgba(255,94,94,0.2);'}">
+            ${c.ativo ? 'Ativo' : 'Inativo'}
+          </span>
+        </td>
+        <td style="padding:14px 16px;text-align:right;">
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+            <button onclick="editarCliente('${c.id}')" style="padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;font-family:Inter,sans-serif;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">Editar</button>
+            <button onclick="toggleCliente('${c.id}', ${c.ativo})" style="padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;font-family:Inter,sans-serif;transition:color .2s,border-color .2s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">${c.ativo ? 'Desativar' : 'Ativar'}</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // busca
+  document.getElementById('cli-busca').addEventListener('input', function(){
+    const q = this.value.toLowerCase();
+    const filtrado = todosClientes.filter(c =>
+      (c.nome || '').toLowerCase().includes(q) ||
+      (c.email || '').toLowerCase().includes(q)
+    );
+    renderClientes(filtrado);
+  });
+
+  // modal
+  function abrirModal(titulo) {
+    document.getElementById('modal-titulo').textContent = titulo;
+    document.getElementById('modal-cliente').style.display = 'block';
+    document.getElementById('cli-erro').style.display = 'none';
+    document.getElementById('btn-salvar-cliente').textContent = 'Salvar';
+    document.getElementById('btn-salvar-cliente').disabled = false;
+  }
+
+  function fecharModal() {
+    document.getElementById('modal-cliente').style.display = 'none';
+    document.getElementById('cli-nome').value = '';
+    document.getElementById('cli-email').value = '';
+    document.getElementById('cli-senha').value = '';
+    clienteEditandoId = null;
+  }
+
+  document.getElementById('btn-novo-cliente').addEventListener('click', () => {
+    clienteEditandoId = null;
+    fecharModal();
+    abrirModal('Novo cliente');
+  });
+  document.getElementById('btn-fechar-modal').addEventListener('click', fecharModal);
+  document.getElementById('btn-cancelar-cliente').addEventListener('click', fecharModal);
+
+  document.getElementById('btn-salvar-cliente').addEventListener('click', async function(){
+    const nome  = document.getElementById('cli-nome').value.trim();
+    const email = document.getElementById('cli-email').value.trim().toLowerCase();
+    const senha = document.getElementById('cli-senha').value.trim();
+    const errEl = document.getElementById('cli-erro');
+
+    if (!email) {
+      errEl.textContent = 'E-mail é obrigatório.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!clienteEditandoId && !senha) {
+      errEl.textContent = 'Senha é obrigatória.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    this.textContent = 'Salvando…';
+    this.disabled = true;
+    errEl.style.display = 'none';
+
+    try {
+      if (clienteEditandoId) {
+        const payload = { nome, email };
+        if (senha) payload.senha = senha;
+        await sbFetch(`clientes?id=eq.${clienteEditandoId}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+          prefer: 'return=representation'
+        });
+        showToast('✓ Cliente atualizado');
+      } else {
+        await sbFetch('clientes', {
+          method: 'POST',
+          body: JSON.stringify({ nome, email, senha, revendedor_id: state.revendedorId, ativo: true }),
+          prefer: 'return=representation'
+        });
+        showToast('✓ Cliente cadastrado');
+      }
+      fecharModal();
+      carregarClientes();
+    } catch(err) {
+      errEl.textContent = err.message.includes('unique') ? 'E-mail já cadastrado.' : err.message;
+      errEl.style.display = 'block';
+      this.textContent = 'Salvar';
+      this.disabled = false;
+    }
+  });
+
+  // editar
+  window.editarCliente = function(id) {
+    const c = todosClientes.find(x => x.id === id);
+    if (!c) return;
+    clienteEditandoId = id;
+    document.getElementById('cli-nome').value  = c.nome || '';
+    document.getElementById('cli-email').value = c.email || '';
+    document.getElementById('cli-senha').value = '';
+    abrirModal('Editar cliente');
+  };
+
+  // ativar/desativar
+  window.toggleCliente = async function(id, ativo) {
+    try {
+      await sbFetch(`clientes?id=eq.${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ ativo: !ativo }),
+        prefer: 'return=representation'
+      });
+      showToast(ativo ? 'Cliente desativado' : 'Cliente ativado');
+      carregarClientes();
+    } catch(err) {
+      showToast('❌ Erro: ' + err.message);
+    }
+  };
+
+  // carrega quando entra na página
+  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
+    btn.addEventListener('click', function(){
+      if (this.dataset.page === 'clientes') {
+        setTimeout(carregarClientes, 50);
+      }
+    });
   });
 
   // ── SIDEBAR USER SYNC ──

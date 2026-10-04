@@ -1712,6 +1712,29 @@
   }
 
   // ── SIDEBAR NAVIGATION ──
+  function navegarPara(page) {
+    if (!page || page === 'sair') return;
+
+    // atualiza hash na URL sem recarregar
+    window.location.hash = page;
+
+    // remove active de todos os itens
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    const btnAtivo = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (btnAtivo) btnAtivo.classList.add('active');
+
+    // esconde todas as páginas
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+    // mostra a página correta
+    const target = document.getElementById('page-' + page);
+    if (target) target.classList.add('active');
+
+    // carrega dados da página
+    if (page === 'clientes') setTimeout(carregarClientes, 50);
+    if (page === 'inicio')   setTimeout(carregarDashboard, 50);
+  }
+
   document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
     btn.addEventListener('click', function(){
       const page = this.dataset.page;
@@ -1721,21 +1744,17 @@
         }
         return;
       }
-
-      // remove active de todos
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-
-      // esconde todas as páginas
-      document.querySelectorAll('.page').forEach(p => {
-        p.classList.remove('active');
-      });
-
-      // mostra a página correta
-      const target = document.getElementById('page-' + page);
-      if (target) target.classList.add('active');
+      navegarPara(page);
     });
   });
+
+  // restaura página pelo hash ao carregar
+  function restaurarPagina() {
+    const hash = window.location.hash.replace('#', '');
+    const paginas = ['inicio', 'personalizacao', 'clientes', 'planos', 'suporte', 'configuracoes'];
+    const paginaAtual = paginas.includes(hash) ? hash : 'personalizacao';
+    navegarPara(paginaAtual);
+  }
 
   // garante estado inicial correto — CSS cuida do display via .active
 
@@ -1795,12 +1814,7 @@
     }
   }
 
-  // carrega ao clicar em Início
-  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
-    btn.addEventListener('click', function(){
-      if (this.dataset.page === 'inicio') setTimeout(carregarDashboard, 50);
-    });
-  });
+
 
   // ── CLIENTES ──
   let todosClientes = [];
@@ -1958,14 +1972,7 @@
     }
   };
 
-  // carrega quando entra na página
-  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
-    btn.addEventListener('click', function(){
-      if (this.dataset.page === 'clientes') {
-        setTimeout(carregarClientes, 50);
-      }
-    });
-  });
+  // carregamento por página já tratado na função navegarPara
 
   // ── SIDEBAR USER SYNC ──
   document.getElementById('brand-name').addEventListener('input', function(){
@@ -1976,7 +1983,12 @@
   // ── INIT ──
   updateBgGradientThumb();
   applyPreviewBg();
-  carregarRevendedor().then(() => carregarDashboard());
+  restaurarPagina();
+  carregarRevendedor().then(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (!hash || hash === 'inicio') carregarDashboard();
+    if (hash === 'clientes') carregarClientes();
+  });
 
 })();
 </script>

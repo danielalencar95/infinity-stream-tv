@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Minha Área — Stream Plus</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  /* ── TOKENS (serão sobrescritos dinamicamente pelo white label) ── */
+  :root {
+    --bg:       #0a0612;
+    --bg2:      #110c1e;
+    --accent:   #b565ff;
+    --accent-rgb: 181,101,255;
+    --card:     rgba(255,255,255,0.05);
+    --card-border: rgba(255,255,255,0.07);
+    --text:     #f0eafa;
+    --muted:    rgba(240,234,250,0.45);
+    --radius:   16px;
+    --radius-sm: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px env(safe-area-inset-bottom, 0px);
+  }
+
+  /* ── TELA DE LOGIN ── */
+  .login-screen {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .login-logo-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: rgba(var(--accent-rgb), 0.12);
+    border: 1.5px solid rgba(var(--accent-rgb), 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+  .login-logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+    position: absolute;
+    inset: 0;
+  }
+  .login-logo-wrap img.visible { display: block; }
+
+  .login-brand {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .login-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    text-align: center;
+  }
+
+  .login-card {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .login-card h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .field input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+  }
+  .field input::placeholder { color: var(--muted); }
+
+  .btn-login {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s, transform .1s;
+    margin-top: 4px;
+    letter-spacing: 0.01em;
+  }
+  .btn-login:hover { opacity: 0.88; }
+  .btn-login:active { transform: scale(0.98); }
+  .btn-login:disabled { opacity: 0.45; cursor: default; }
+
+  .login-error {
+    font-size: 12px;
+    color: #ff6b6b;
+    text-align: center;
+    display: none;
+  }
+  .login-error.visible { display: block; }
+
+  .login-help {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+  .login-help a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* ── TELA DO PAINEL ── */
+  .dashboard-screen {
+    display: none;
+    width: 100%;
+    max-width: 480px;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .dashboard-screen.visible {
+    display: flex;
+  }
+
+  /* Header */
+  .dash-header {
+    padding: 32px 24px 24px;
+    text-align: center;
+    position: relative;
+  }
+
+  .dash-logo-wrap {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    background: rgba(var(--accent-rgb), 0.1);
+    border: 1.5px solid rgba(var(--accent-rgb), 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 14px;
+    overflow: hidden;
+    position: relative;
+  }
+  .dash-logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+    position: absolute;
+    inset: 0;
+  }
+  .dash-logo-wrap img.visible { display: block; }
+
+  .dash-brand {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .dash-tagline {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .dash-user-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    padding: 5px 12px 5px 6px;
+    margin-top: 16px;
+  }
+  .dash-user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(var(--accent-rgb),0.6), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .dash-user-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .btn-logout {
+    position: absolute;
+    top: 28px;
+    right: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    transition: color .2s, background .2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-logout:hover { color: var(--text); background: rgba(255,255,255,0.07); }
+
+  /* Divisor */
+  .dash-divider {
+    height: 1px;
+    background: var(--card-border);
+    margin: 0 20px;
+  }
+
+  /* Grid de ícones */
+  .dash-body {
+    padding: 24px 20px 32px;
+    flex: 1;
+  }
+
+  .dash-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .icons-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .icon-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .15s, transform .15s, border-color .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .icon-card:hover {
+    background: rgba(var(--accent-rgb), 0.08);
+    border-color: rgba(var(--accent-rgb), 0.2);
+    transform: translateY(-2px);
+  }
+  .icon-card:active { transform: scale(0.97); }
+
+  .icon-img-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(var(--accent-rgb), 0.1);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .icon-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .icon-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--muted);
+    font-size: 13px;
+    grid-column: 1 / -1;
+  }
+  .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* Footer */
+  .dash-footer {
+    padding: 16px 24px;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.18);
+    border-top: 1px solid var(--card-border);
+  }
+
+  /* ── LOADING ── */
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: opacity .3s;
+  }
+  .loading-screen.hidden { opacity: 0; pointer-events: none; }
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(var(--accent-rgb), 0.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1a1230;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+    z-index: 998;
+    white-space: nowrap;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(var(--accent-rgb),0.2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-screen" id="loading">
+  <div class="spinner"></div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-logo-wrap" id="login-logo-wrap">
+    📺
+    <img id="login-logo-img" src="" alt=""/>
+  </div>
+  <div class="login-brand" id="login-brand">Stream Plus</div>
+  <div class="login-tagline" id="login-tagline">Entretenimento sem limites</div>
+
+  <div class="login-card">
+    <h2>Entrar na sua conta</h2>
+
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="input-email" placeholder="seuemail@exemplo.com" autocomplete="email"/>
+    </div>
+
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="input-password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <div class="login-error" id="login-error">E-mail ou senha incorretos. Tente novamente.</div>
+
+    <button class="btn-login" id="btn-login">Entrar</button>
+  </div>
+
+  <div class="login-help">
+    Esqueceu sua senha? Fale com o<br>
+    <a href="#" id="suporte-link">suporte via WhatsApp</a>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard-screen" id="dashboard-screen">
+
+  <div class="dash-header">
+    <button class="btn-logout" id="btn-logout">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair
+    </button>
+
+    <div class="dash-logo-wrap" id="dash-logo-wrap">
+      📺
+      <img id="dash-logo-img" src="" alt=""/>
+    </div>
+    <div class="dash-brand" id="dash-brand">Stream Plus</div>
+    <div class="dash-tagline" id="dash-tagline">Entretenimento sem limites</div>
+
+    <div class="dash-user-pill">
+      <div class="dash-user-avatar" id="dash-user-avatar">C</div>
+      <span class="dash-user-name" id="dash-user-name">cliente@email.com</span>
+    </div>
+  </div>
+
+  <div class="dash-divider"></div>
+
+  <div class="dash-body">
+    <div class="dash-section-title">Acesso rápido</div>
+    <div class="icons-grid" id="icons-grid">
+      <!-- preenchido pelo JS -->
+    </div>
+  </div>
+
+  <div class="dash-footer" id="dash-footer">
+    Powered by Infinity Stream TV
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+
+  // ─────────────────────────────────────────────
+  // CONFIG WHITE LABEL
+  // (futuramente vem do Supabase com base na URL)
+  // ─────────────────────────────────────────────
+  const config = {
+    brandName:   'Stream Plus',
+    tagline:     'Entretenimento sem limites',
+    logoUrl:     null,          // URL da logo
+    colorBg:     '#0a0612',
+    colorAccent: '#b565ff',
+    bgType:      'gradient',    // 'solid' | 'gradient' | 'image'
+    bgImageUrl:  null,
+    suporteUrl:  'https://wa.me/5511999999999',
+    icons: [
+      { label: 'Ativar Aplicativo', imgUrl: null, url: '#', emoji: '📲' },
+      { label: 'Suporte WhatsApp',  imgUrl: null, url: 'https://wa.me/5511999999999', emoji: '💬' },
+      { label: 'Renovar Plano',     imgUrl: null, url: '#', emoji: '🔄' },
+      { label: 'Indicar Amigos',    imgUrl: null, url: '#', emoji: '👥' },
+    ]
+  };
+
+  // ─────────────────────────────────────────────
+  // DEMO: conta de teste
+  // ─────────────────────────────────────────────
+  const DEMO_CREDENTIALS = { email: 'cliente@demo.com', senha: '123456' };
+
+  // ─────────────────────────────────────────────
+  // HELPERS
+  // ─────────────────────────────────────────────
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `${r},${g},${b}`;
+  }
+
+  function showToast(msg, duration) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration || 2500);
+  }
+
+  // ─────────────────────────────────────────────
+  // APLICAR WHITE LABEL
+  // ─────────────────────────────────────────────
+  function applyWhiteLabel() {
+    const root = document.documentElement;
+    root.style.setProperty('--accent', config.colorAccent);
+    root.style.setProperty('--accent-rgb', hexToRgb(config.colorAccent));
+
+    // fundo
+    let bgValue = config.colorBg;
+    if (config.bgType === 'gradient') {
+      bgValue = `linear-gradient(160deg, ${config.colorBg} 0%, color-mix(in srgb, ${config.colorAccent} 14%, ${config.colorBg}) 100%)`;
+    } else if (config.bgType === 'image' && config.bgImageUrl) {
+      bgValue = `linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url(${config.bgImageUrl})`;
+    }
+    document.body.style.background = bgValue;
+    if (config.bgType === 'image') {
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+    }
+
+    root.style.setProperty('--bg', config.colorBg);
+    root.style.setProperty('--bg2', config.colorBg + 'ee');
+
+    // título da página
+    document.title = `Minha Área — ${config.brandName}`;
+
+    // textos
+    ['login-brand','dash-brand'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = config.brandName;
+    });
+    ['login-tagline','dash-tagline'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = config.tagline || '';
+      if (el && !config.tagline) el.style.display = 'none';
+    });
+
+    // logo
+    if (config.logoUrl) {
+      ['login-logo-img','dash-logo-img'].forEach(id => {
+        const img = document.getElementById(id);
+        if (!img) return;
+        img.src = config.logoUrl;
+        img.classList.add('visible');
+        img.previousSibling && (img.previousSibling.textContent = '');
+      });
+    }
+
+    // suporte link
+    const sl = document.getElementById('suporte-link');
+    if (sl) sl.href = config.suporteUrl;
+
+    // btn login cor
+    document.getElementById('btn-login').style.background = config.colorAccent;
+  }
+
+  // ─────────────────────────────────────────────
+  // RENDERIZAR ÍCONES
+  // ─────────────────────────────────────────────
+  function renderIcons() {
+    const grid = document.getElementById('icons-grid');
+    grid.innerHTML = '';
+
+    if (!config.icons || config.icons.length === 0) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔲</div>Nenhum acesso disponível ainda.</div>`;
+      return;
+    }
+
+    config.icons.forEach(ic => {
+      const card = document.createElement('a');
+      card.className = 'icon-card';
+      card.href = ic.url || '#';
+      if (ic.url && ic.url !== '#') card.target = '_blank';
+
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'icon-img-wrap';
+
+      if (ic.imgUrl) {
+        const img = document.createElement('img');
+        img.src = ic.imgUrl;
+        img.alt = ic.label;
+        imgWrap.appendChild(img);
+      } else {
+        imgWrap.textContent = ic.emoji || '🔗';
+        imgWrap.style.fontSize = '26px';
+      }
+
+      const label = document.createElement('div');
+      label.className = 'icon-label';
+      label.textContent = ic.label;
+
+      card.appendChild(imgWrap);
+      card.appendChild(label);
+      grid.appendChild(card);
+    });
+  }
+
+  // ─────────────────────────────────────────────
+  // LOGIN
+  // ─────────────────────────────────────────────
+  const btnLogin = document.getElementById('btn-login');
+  const inputEmail = document.getElementById('input-email');
+  const inputPwd = document.getElementById('input-password');
+
+  function doLogin() {
+    const email = inputEmail.value.trim();
+    const pwd = inputPwd.value;
+    const errEl = document.getElementById('login-error');
+
+    if (!email || !pwd) {
+      errEl.textContent = 'Preencha e-mail e senha.';
+      errEl.classList.add('visible');
+      return;
+    }
+
+    errEl.classList.remove('visible');
+    btnLogin.disabled = true;
+    btnLogin.textContent = 'Entrando…';
+
+    // Simula autenticação (futuro: Supabase Auth)
+    setTimeout(() => {
+      if (email === DEMO_CREDENTIALS.email && pwd === DEMO_CREDENTIALS.senha) {
+        sessionStorage.setItem('wl_user', JSON.stringify({ email }));
+        showDashboard(email);
+      } else {
+        errEl.textContent = 'E-mail ou senha incorretos.';
+        errEl.classList.add('visible');
+        btnLogin.disabled = false;
+        btnLogin.textContent = 'Entrar';
+        inputPwd.value = '';
+        inputPwd.focus();
+      }
+    }, 900);
+  }
+
+  btnLogin.addEventListener('click', doLogin);
+  [inputEmail, inputPwd].forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  });
+
+  // ─────────────────────────────────────────────
+  // DASHBOARD
+  // ─────────────────────────────────────────────
+  function showDashboard(email) {
+    document.getElementById('login-screen').style.display = 'none';
+    const dash = document.getElementById('dashboard-screen');
+    dash.classList.add('visible');
+
+    const initial = email[0].toUpperCase();
+    document.getElementById('dash-user-avatar').textContent = initial;
+    document.getElementById('dash-user-name').textContent = email;
+
+    renderIcons();
+    showToast('Bem-vindo! 👋');
+  }
+
+  document.getElementById('btn-logout').addEventListener('click', function(){
+    sessionStorage.removeItem('wl_user');
+    document.getElementById('dashboard-screen').classList.remove('visible');
+    document.getElementById('dashboard-screen').style.display = '';
+    document.getElementById('login-screen').style.display = '';
+    inputEmail.value = '';
+    inputPwd.value = '';
+    document.getElementById('btn-login').disabled = false;
+    document.getElementById('btn-login').textContent = 'Entrar';
+    document.getElementById('login-error').classList.remove('visible');
+    showToast('Sessão encerrada.');
+  });
+
+  // ─────────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────────
+  applyWhiteLabel();
+
+  // verifica sessão ativa
+  const saved = sessionStorage.getItem('wl_user');
+  if (saved) {
+    try {
+      const user = JSON.parse(saved);
+      document.getElementById('login-screen').style.display = 'none';
+      showDashboard(user.email);
+    } catch(e) {
+      sessionStorage.removeItem('wl_user');
+    }
+  }
+
+  // esconde loading
+  setTimeout(() => {
+    document.getElementById('loading').classList.add('hidden');
+    setTimeout(() => document.getElementById('loading').remove(), 400);
+  }, 500);
+
+})();
+</script>
+</body>
+</html>

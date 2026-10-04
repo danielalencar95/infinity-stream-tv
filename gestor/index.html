@@ -891,28 +891,86 @@
 <!-- PAGES -->
 
 <!-- PAGE: INÍCIO -->
-<div class="page" id="page-inicio" style="flex:1;overflow:auto;background:var(--bg);padding:32px;">
-  <div style="max-width:700px;">
-    <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;">Bem-vindo 👋</h2>
-    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Veja um resumo da sua operação.</p>
+<div class="page" id="page-inicio" style="flex:1;overflow:auto;background:var(--bg);">
+  <div style="max-width:860px;margin:0 auto;padding:32px 32px 48px;">
+
+    <!-- Saudação -->
+    <div style="margin-bottom:28px;">
+      <h2 style="font-size:22px;font-weight:700;margin-bottom:4px;">Bem-vindo 👋</h2>
+      <p style="color:var(--muted);font-size:13px;" id="dash-subtitulo">Carregando resumo da sua operação…</p>
+    </div>
+
+    <!-- Cards de métricas -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Clientes ativos</div>
-        <div style="font-size:28px;font-weight:700;color:var(--text);">0</div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Clientes ativos</span>
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.15);display:flex;align-items:center;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+        <div style="font-size:36px;font-weight:700;color:var(--text);line-height:1;" id="dash-ativos">—</div>
+        <div style="font-size:12px;color:var(--muted);" id="dash-ativos-label">de <span id="dash-total">—</span> cadastrados</div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Planos ativos</div>
-        <div style="font-size:28px;font-weight:700;color:var(--text);">0</div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Inativos</span>
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,94,94,0.1);border:1px solid rgba(255,94,94,0.15);display:flex;align-items:center;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff5e5e" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+        </div>
+        <div style="font-size:36px;font-weight:700;color:var(--text);line-height:1;" id="dash-inativos">—</div>
+        <div style="font-size:12px;color:var(--muted);">clientes desativados</div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Tickets abertos</div>
-        <div style="font-size:28px;font-weight:700;color:var(--text);">0</div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Novos este mês</span>
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(181,101,255,0.1);border:1px solid rgba(181,101,255,0.15);display:flex;align-items:center;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+        </div>
+        <div style="font-size:36px;font-weight:700;color:var(--text);line-height:1;" id="dash-novos">—</div>
+        <div style="font-size:12px;color:var(--muted);" id="dash-mes">cadastrados em <span id="dash-mes-nome">—</span></div>
       </div>
+
     </div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;color:var(--muted);font-size:13px;">
-      <div style="font-size:32px;margin-bottom:10px;">📊</div>
-      Dashboard em construção — os dados aparecerão aqui após integração com o Supabase.
+
+    <!-- Últimos clientes -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:13px;font-weight:600;">Clientes recentes</span>
+        <button onclick="document.querySelector('[data-page=clientes]').click()" style="font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:Inter,sans-serif;font-weight:500;">Ver todos →</button>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:rgba(255,255,255,0.02);">
+            <th style="padding:10px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Nome</th>
+            <th style="padding:10px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">E-mail</th>
+            <th style="padding:10px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Cadastrado em</th>
+            <th style="padding:10px 20px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="dash-recentes-tbody">
+          <tr><td colspan="4" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Carregando…</td></tr>
+        </tbody>
+      </table>
     </div>
+
+    <!-- Link rápido -->
+    <div style="display:flex;gap:12px;">
+      <button onclick="document.querySelector('[data-page=clientes]').click()" style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo cliente
+      </button>
+      <button onclick="document.querySelector('[data-page=personalizacao]').click()" style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>
+        Editar personalização
+      </button>
+    </div>
+
   </div>
 </div>
 
@@ -1681,6 +1739,69 @@
     if (!p.classList.contains('active')) p.style.display = 'none';
   });
 
+  // ── DASHBOARD INÍCIO ──
+  async function carregarDashboard() {
+    if (!state.revendedorId) return;
+    try {
+      const data = await sbFetch(`clientes?revendedor_id=eq.${state.revendedorId}&order=criado_em.desc`);
+      const clientes = data || [];
+
+      const ativos   = clientes.filter(c => c.ativo).length;
+      const inativos = clientes.filter(c => !c.ativo).length;
+      const total    = clientes.length;
+
+      const agora    = new Date();
+      const mesAtual = agora.getMonth();
+      const anoAtual = agora.getFullYear();
+      const novos    = clientes.filter(c => {
+        const d = new Date(c.criado_em);
+        return d.getMonth() === mesAtual && d.getFullYear() === anoAtual;
+      }).length;
+
+      const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+      document.getElementById('dash-ativos').textContent   = ativos;
+      document.getElementById('dash-inativos').textContent = inativos;
+      document.getElementById('dash-novos').textContent    = novos;
+      document.getElementById('dash-total').textContent    = total;
+      document.getElementById('dash-mes-nome').textContent = meses[mesAtual];
+      document.getElementById('dash-subtitulo').textContent = `Resumo da operação — ${state.brandName}`;
+
+      // tabela recentes (últimos 5)
+      const recentes = clientes.slice(0, 5);
+      const tbody = document.getElementById('dash-recentes-tbody');
+      if (recentes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="padding:32px;text-align:center;color:var(--muted);font-size:13px;">Nenhum cliente ainda.</td></tr>`;
+      } else {
+        tbody.innerHTML = recentes.map(c => {
+          const data = new Date(c.criado_em);
+          const dataFmt = data.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+          return `<tr style="border-top:1px solid var(--border);">
+            <td style="padding:13px 20px;font-size:13px;font-weight:500;">${c.nome || '—'}</td>
+            <td style="padding:13px 20px;font-size:13px;color:var(--muted);">${c.email}</td>
+            <td style="padding:13px 20px;font-size:12px;color:var(--muted);">${dataFmt}</td>
+            <td style="padding:13px 20px;text-align:center;">
+              <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;${c.ativo
+                ? 'background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);'
+                : 'background:rgba(255,94,94,0.1);color:#ff5e5e;border:1px solid rgba(255,94,94,0.2);'}">
+                ${c.ativo ? 'Ativo' : 'Inativo'}
+              </span>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+    } catch(err) {
+      console.warn('Dashboard:', err.message);
+    }
+  }
+
+  // carrega ao clicar em Início
+  document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
+    btn.addEventListener('click', function(){
+      if (this.dataset.page === 'inicio') setTimeout(carregarDashboard, 50);
+    });
+  });
+
   // ── CLIENTES ──
   let todosClientes = [];
   let clienteEditandoId = null;
@@ -1855,7 +1976,7 @@
   // ── INIT ──
   updateBgGradientThumb();
   applyPreviewBg();
-  carregarRevendedor();
+  carregarRevendedor().then(() => carregarDashboard());
 
 })();
 </script>

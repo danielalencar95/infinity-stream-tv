@@ -401,17 +401,14 @@ footer{
     root.style.setProperty('--accent', config.colorAccent);
     root.style.setProperty('--accent-rgb', hexToRgb(config.colorAccent));
 
-    if(config.bgType==='image'&&config.bgImageUrl){
+    // Só sobrescreve o fundo se o revendedor tiver imagem própria configurada
+    if(config.bgType==='image' && config.bgImageUrl){
       document.body.style.backgroundImage=`linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url(${config.bgImageUrl})`;
       document.body.style.backgroundSize='cover';
       document.body.style.backgroundPosition='center';
       document.body.style.backgroundAttachment='fixed';
-    } else if(config.bgType==='gradient'){
-      document.body.style.background=`linear-gradient(160deg,${config.colorBg} 0%,color-mix(in srgb,${config.colorAccent} 14%,${config.colorBg}) 100%)`;
-      document.body.style.backgroundImage='';
-    } else {
-      document.body.style.background=config.colorBg||'#0a0014';
     }
+    // caso contrário mantém o fundo padrão embutido no CSS
 
     document.title=`Minha Área — ${config.brandName}`;
     ['login-brand','dash-brand'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=config.brandName; });

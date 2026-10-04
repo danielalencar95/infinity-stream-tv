@@ -499,30 +499,44 @@
 (function(){
 
   // ─────────────────────────────────────────────
-  // CONFIG WHITE LABEL
-  // (futuramente vem do Supabase com base na URL)
+  // SUPABASE CONFIG
   // ─────────────────────────────────────────────
-  const config = {
-    brandName:   'Stream Plus',
-    tagline:     'Entretenimento sem limites',
-    logoUrl:     null,          // URL da logo
-    colorBg:     '#0a0612',
-    colorAccent: '#b565ff',
-    bgType:      'gradient',    // 'solid' | 'gradient' | 'image'
-    bgImageUrl:  null,
-    suporteUrl:  'https://wa.me/5511999999999',
-    icons: [
-      { label: 'Ativar Aplicativo', imgUrl: null, url: '#', emoji: '📲' },
-      { label: 'Suporte WhatsApp',  imgUrl: null, url: 'https://wa.me/5511999999999', emoji: '💬' },
-      { label: 'Renovar Plano',     imgUrl: null, url: '#', emoji: '🔄' },
-      { label: 'Indicar Amigos',    imgUrl: null, url: '#', emoji: '👥' },
-    ]
-  };
+  const SUPABASE_URL = 'https://hxptaygjtvyyteyqlpeb.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4cHRheWdqdHZ5eXRleXFscGViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEwNzAxNjEsImV4cCI6MjEwNjY0NjE2MX0.dYAIcixEYEUuxfeFUmoOqTNX0MoO17yKfEdz6K4wZL0';
+
+  async function sbFetch(path, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      },
+      ...options
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
 
   // ─────────────────────────────────────────────
-  // DEMO: conta de teste
+  // CONFIG WHITE LABEL (preenchida pelo Supabase)
   // ─────────────────────────────────────────────
-  const DEMO_CREDENTIALS = { email: 'cliente@demo.com', senha: '123456' };
+  let config = {
+    revendedorId: null,
+    brandName:    'Carregando…',
+    tagline:      '',
+    logoUrl:      null,
+    colorBg:      '#0a0612',
+    colorAccent:  '#b565ff',
+    bgType:       'gradient',
+    bgImageUrl:   null,
+    suporteUrl:   '#',
+    icons:        []
+  };
 
   // ─────────────────────────────────────────────
   // HELPERS
@@ -534,11 +548,50 @@
     return `${r},${g},${b}`;
   }
 
+  function getSlug() {
+    // Pega slug da URL: /cliente?r=stream-plus ou /cliente/stream-plus
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('r')) return params.get('r');
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    // pega o último segmento se não for "cliente"
+    const last = parts[parts.length - 1];
+    return (last && last !== 'cliente') ? last : 'stream-plus';
+  }
+
   function showToast(msg, duration) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), duration || 2500);
+  }
+
+  // ─────────────────────────────────────────────
+  // CARREGAR WHITE LABEL DO SUPABASE
+  // ─────────────────────────────────────────────
+  async function carregarWhiteLabel() {
+    const slug = getSlug();
+    try {
+      const data = await sbFetch(`revendedores?slug=eq.${encodeURIComponent(slug)}&ativo=eq.true&limit=1`);
+      if (!data || data.length === 0) throw new Error('Revendedor não encontrado');
+
+      const r = data[0];
+      config.revendedorId = r.id;
+      config.brandName    = r.nome_marca || 'Minha Área';
+      config.tagline      = r.tagline || '';
+      config.logoUrl      = r.logo_url || null;
+      config.colorBg      = r.cor_fundo || '#0a0612';
+      config.colorAccent  = r.cor_destaque || '#b565ff';
+      config.bgType       = r.bg_type || 'solid';
+      config.bgImageUrl   = r.bg_image_url || null;
+      config.suporteUrl   = r.suporte_url || '#';
+      config.icons        = r.icones || [];
+
+    } catch(err) {
+      console.warn('White label:', err.message);
+      // mantém defaults silenciosamente
+    }
+
+    applyWhiteLabel();
   }
 
   // ─────────────────────────────────────────────
@@ -549,53 +602,46 @@
     root.style.setProperty('--accent', config.colorAccent);
     root.style.setProperty('--accent-rgb', hexToRgb(config.colorAccent));
 
-    // fundo
     let bgValue = config.colorBg;
     if (config.bgType === 'gradient') {
       bgValue = `linear-gradient(160deg, ${config.colorBg} 0%, color-mix(in srgb, ${config.colorAccent} 14%, ${config.colorBg}) 100%)`;
     } else if (config.bgType === 'image' && config.bgImageUrl) {
       bgValue = `linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url(${config.bgImageUrl})`;
-    }
-    document.body.style.background = bgValue;
-    if (config.bgType === 'image') {
       document.body.style.backgroundSize = 'cover';
       document.body.style.backgroundPosition = 'center';
       document.body.style.backgroundAttachment = 'fixed';
     }
-
+    document.body.style.background = bgValue;
     root.style.setProperty('--bg', config.colorBg);
     root.style.setProperty('--bg2', config.colorBg + 'ee');
 
-    // título da página
     document.title = `Minha Área — ${config.brandName}`;
 
-    // textos
     ['login-brand','dash-brand'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = config.brandName;
     });
     ['login-tagline','dash-tagline'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.textContent = config.tagline || '';
-      if (el && !config.tagline) el.style.display = 'none';
+      if (!el) return;
+      el.textContent = config.tagline || '';
+      el.style.display = config.tagline ? '' : 'none';
     });
 
-    // logo
     if (config.logoUrl) {
       ['login-logo-img','dash-logo-img'].forEach(id => {
         const img = document.getElementById(id);
         if (!img) return;
         img.src = config.logoUrl;
         img.classList.add('visible');
-        img.previousSibling && (img.previousSibling.textContent = '');
+        const prev = img.previousSibling;
+        if (prev && prev.nodeType === 3) prev.textContent = '';
       });
     }
 
-    // suporte link
     const sl = document.getElementById('suporte-link');
-    if (sl) sl.href = config.suporteUrl;
+    if (sl) sl.href = config.suporteUrl || '#';
 
-    // btn login cor
     document.getElementById('btn-login').style.background = config.colorAccent;
   }
 
@@ -641,15 +687,15 @@
   }
 
   // ─────────────────────────────────────────────
-  // LOGIN
+  // LOGIN via Supabase
   // ─────────────────────────────────────────────
   const btnLogin = document.getElementById('btn-login');
   const inputEmail = document.getElementById('input-email');
   const inputPwd = document.getElementById('input-password');
 
-  function doLogin() {
-    const email = inputEmail.value.trim();
-    const pwd = inputPwd.value;
+  async function doLogin() {
+    const email = inputEmail.value.trim().toLowerCase();
+    const pwd   = inputPwd.value;
     const errEl = document.getElementById('login-error');
 
     if (!email || !pwd) {
@@ -662,20 +708,40 @@
     btnLogin.disabled = true;
     btnLogin.textContent = 'Entrando…';
 
-    // Simula autenticação (futuro: Supabase Auth)
-    setTimeout(() => {
-      if (email === DEMO_CREDENTIALS.email && pwd === DEMO_CREDENTIALS.senha) {
-        sessionStorage.setItem('wl_user', JSON.stringify({ email }));
-        showDashboard(email);
-      } else {
-        errEl.textContent = 'E-mail ou senha incorretos.';
-        errEl.classList.add('visible');
-        btnLogin.disabled = false;
-        btnLogin.textContent = 'Entrar';
-        inputPwd.value = '';
-        inputPwd.focus();
+    try {
+      // Busca cliente pelo email + revendedor
+      const query = config.revendedorId
+        ? `clientes?email=eq.${encodeURIComponent(email)}&revendedor_id=eq.${config.revendedorId}&ativo=eq.true&limit=1`
+        : `clientes?email=eq.${encodeURIComponent(email)}&ativo=eq.true&limit=1`;
+
+      const data = await sbFetch(query);
+
+      if (!data || data.length === 0) {
+        throw new Error('E-mail ou senha incorretos.');
       }
-    }, 900);
+
+      // Por ora a senha é validada como campo simples
+      // (futuramente: migrar para Supabase Auth com hash)
+      const cliente = data[0];
+      if (cliente.senha && cliente.senha !== pwd) {
+        throw new Error('E-mail ou senha incorretos.');
+      }
+
+      sessionStorage.setItem('wl_user', JSON.stringify({
+        email,
+        nome: cliente.nome || email,
+        id:   cliente.id
+      }));
+      showDashboard(email, cliente.nome);
+
+    } catch(err) {
+      errEl.textContent = err.message || 'Erro ao entrar. Tente novamente.';
+      errEl.classList.add('visible');
+      btnLogin.disabled = false;
+      btnLogin.textContent = 'Entrar';
+      inputPwd.value = '';
+      inputPwd.focus();
+    }
   }
 
   btnLogin.addEventListener('click', doLogin);
@@ -686,14 +752,14 @@
   // ─────────────────────────────────────────────
   // DASHBOARD
   // ─────────────────────────────────────────────
-  function showDashboard(email) {
+  function showDashboard(email, nome) {
     document.getElementById('login-screen').style.display = 'none';
     const dash = document.getElementById('dashboard-screen');
     dash.classList.add('visible');
 
-    const initial = email[0].toUpperCase();
-    document.getElementById('dash-user-avatar').textContent = initial;
-    document.getElementById('dash-user-name').textContent = email;
+    const display = nome || email;
+    document.getElementById('dash-user-avatar').textContent = display[0].toUpperCase();
+    document.getElementById('dash-user-name').textContent = display;
 
     renderIcons();
     showToast('Bem-vindo! 👋');
@@ -702,12 +768,11 @@
   document.getElementById('btn-logout').addEventListener('click', function(){
     sessionStorage.removeItem('wl_user');
     document.getElementById('dashboard-screen').classList.remove('visible');
-    document.getElementById('dashboard-screen').style.display = '';
     document.getElementById('login-screen').style.display = '';
     inputEmail.value = '';
     inputPwd.value = '';
-    document.getElementById('btn-login').disabled = false;
-    document.getElementById('btn-login').textContent = 'Entrar';
+    btnLogin.disabled = false;
+    btnLogin.textContent = 'Entrar';
     document.getElementById('login-error').classList.remove('visible');
     showToast('Sessão encerrada.');
   });
@@ -715,25 +780,30 @@
   // ─────────────────────────────────────────────
   // INIT
   // ─────────────────────────────────────────────
-  applyWhiteLabel();
+  async function init() {
+    await carregarWhiteLabel();
 
-  // verifica sessão ativa
-  const saved = sessionStorage.getItem('wl_user');
-  if (saved) {
-    try {
-      const user = JSON.parse(saved);
-      document.getElementById('login-screen').style.display = 'none';
-      showDashboard(user.email);
-    } catch(e) {
-      sessionStorage.removeItem('wl_user');
+    // verifica sessão ativa
+    const saved = sessionStorage.getItem('wl_user');
+    if (saved) {
+      try {
+        const user = JSON.parse(saved);
+        document.getElementById('login-screen').style.display = 'none';
+        showDashboard(user.email, user.nome);
+      } catch(e) {
+        sessionStorage.removeItem('wl_user');
+      }
     }
+
+    // esconde loading
+    document.getElementById('loading').classList.add('hidden');
+    setTimeout(() => {
+      const l = document.getElementById('loading');
+      if (l) l.remove();
+    }, 400);
   }
 
-  // esconde loading
-  setTimeout(() => {
-    document.getElementById('loading').classList.add('hidden');
-    setTimeout(() => document.getElementById('loading').remove(), 400);
-  }, 500);
+  init();
 
 })();
 </script>

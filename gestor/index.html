@@ -769,6 +769,114 @@
   }
   .cp-empty-icon { font-size: 36px; margin-bottom: 8px; }
 
+  /* ── LOGIN DO GESTOR ── */
+  .gestor-login {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 24px;
+  }
+  .gestor-login.hidden { display: none; }
+
+  .gestor-login-box {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .gestor-login-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .gestor-login-brand span { color: var(--accent); }
+  .gestor-login-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .gestor-login-card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .gestor-login-card h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .gestor-login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .gestor-login-field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .gestor-login-field input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
+  }
+  .gestor-login-field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .gestor-login-field input::placeholder { color: var(--muted); }
+
+  .btn-gestor-login {
+    width: 100%;
+    padding: 11px;
+    background: linear-gradient(90deg, #8a35cc, var(--accent));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity .2s, transform .1s;
+    margin-top: 4px;
+  }
+  .btn-gestor-login:hover { opacity: 0.88; }
+  .btn-gestor-login:active { transform: scale(0.98); }
+  .btn-gestor-login:disabled { opacity: 0.45; cursor: default; }
+
+  .gestor-login-erro {
+    font-size: 12px;
+    color: #ff6b6b;
+    background: rgba(255,94,94,0.08);
+    border: 1px solid rgba(255,94,94,0.2);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    display: none;
+  }
+  .gestor-login-erro.visible { display: block; }
+
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -809,8 +917,38 @@
 </head>
 <body>
 
+<!-- LOGIN DO GESTOR -->
+<div class="gestor-login" id="gestor-login">
+  <div class="gestor-login-box">
+    <div class="gestor-login-brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+      Infinity Stream <span>TV</span>
+    </div>
+    <div class="gestor-login-sub">Área do Gestor</div>
+
+    <div class="gestor-login-card">
+      <h2>Entrar na sua conta</h2>
+
+      <div class="gestor-login-field">
+        <label>E-mail</label>
+        <input type="email" id="gl-email" placeholder="gestor@suamarca.com" autocomplete="email"/>
+      </div>
+      <div class="gestor-login-field">
+        <label>Senha</label>
+        <input type="password" id="gl-senha" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+
+      <div class="gestor-login-erro" id="gl-erro">E-mail ou senha incorretos.</div>
+
+      <button class="btn-gestor-login" id="btn-gl-entrar">Entrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOPBAR -->
-<div class="topbar">
+<div class="topbar" id="main-topbar" style="display:none;">
   <div class="topbar-brand">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
       <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
@@ -825,7 +963,7 @@
 </div>
 
 <!-- APP BODY -->
-<div class="app-body">
+<div class="app-body" id="app-body" style="display:none;">
 
 <!-- SIDEBAR -->
 <nav class="sidebar">
@@ -1296,6 +1434,70 @@
     return text ? JSON.parse(text) : null;
   }
 
+  // ── AUTH DO GESTOR ──
+  function mostrarApp() {
+    document.getElementById('gestor-login').classList.add('hidden');
+    document.getElementById('main-topbar').style.display = '';
+    document.getElementById('app-body').style.display = '';
+  }
+
+  function mostrarLogin() {
+    document.getElementById('gestor-login').classList.remove('hidden');
+    document.getElementById('main-topbar').style.display = 'none';
+    document.getElementById('app-body').style.display = 'none';
+  }
+
+  async function fazerLogin() {
+    const email = document.getElementById('gl-email').value.trim().toLowerCase();
+    const senha = document.getElementById('gl-senha').value;
+    const erroEl = document.getElementById('gl-erro');
+    const btn = document.getElementById('btn-gl-entrar');
+
+    if (!email || !senha) {
+      erroEl.textContent = 'Preencha e-mail e senha.';
+      erroEl.classList.add('visible');
+      return;
+    }
+
+    erroEl.classList.remove('visible');
+    btn.disabled = true;
+    btn.textContent = 'Entrando…';
+
+    try {
+      const data = await sbFetch(
+        `revendedores?email=eq.${encodeURIComponent(email)}&ativo=eq.true&limit=1`
+      );
+
+      if (!data || data.length === 0 || data[0].senha !== senha) {
+        throw new Error('E-mail ou senha incorretos.');
+      }
+
+      const r = data[0];
+      sessionStorage.setItem('gestor_session', JSON.stringify({
+        id:    r.id,
+        slug:  r.slug,
+        nome:  r.nome_marca,
+        email: r.email
+      }));
+
+      mostrarApp();
+      iniciarPainel(r);
+
+    } catch(err) {
+      erroEl.textContent = err.message;
+      erroEl.classList.add('visible');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+    }
+  }
+
+  document.getElementById('btn-gl-entrar').addEventListener('click', fazerLogin);
+  ['gl-email','gl-senha'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') fazerLogin();
+    });
+  });
+
   // ── STATE ──
   const state = {
     revendedorId: null,   // UUID do registro no Supabase
@@ -1656,12 +1858,14 @@
   document.getElementById('btn-save').addEventListener('click', saveToSupabase);
 
   // ── CARREGAR REVENDEDOR (se existir slug na URL ou primeiro registro) ──
-  async function carregarRevendedor() {
+  async function carregarRevendedor(preCarregado) {
     try {
-      const params = new URLSearchParams(window.location.search);
-      const slugParam = params.get('slug');
-      let url = 'revendedores?limit=1&order=criado_em.asc';
-      if (slugParam) url = `revendedores?slug=eq.${encodeURIComponent(slugParam)}`;
+      // pega slug da sessão
+      const sessao = JSON.parse(sessionStorage.getItem('gestor_session') || '{}');
+      const slugSessao = sessao.slug;
+      let url = slugSessao
+        ? `revendedores?slug=eq.${encodeURIComponent(slugSessao)}`
+        : 'revendedores?limit=1&order=criado_em.asc';
 
       const data = await sbFetch(url, { prefer: 'return=representation' });
       if (!data || data.length === 0) return;
@@ -1773,12 +1977,7 @@
   document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
     btn.addEventListener('click', function(){
       const page = this.dataset.page;
-      if (page === 'sair') {
-        if (confirm('Tem certeza que deseja sair?')) {
-          showToast('Sessão encerrada.');
-        }
-        return;
-      }
+      if (page === 'sair') return; // tratado no listener dedicado
       navegarPara(page);
     });
   });
@@ -2015,15 +2214,45 @@
     document.getElementById('sidebar-avatar').textContent = (this.value || 'M')[0].toUpperCase();
   });
 
-  // ── INIT ──
-  updateBgGradientThumb();
-  applyPreviewBg();
-  restaurarPagina();
-  carregarRevendedor().then(() => {
+  // ── INICIAR PAINEL (após login) ──
+  async function iniciarPainel(revendedorPreCarregado) {
+    updateBgGradientThumb();
+    applyPreviewBg();
+    restaurarPagina();
+    await carregarRevendedor(revendedorPreCarregado);
     const hash = window.location.hash.replace('#', '');
     if (!hash || hash === 'inicio') carregarDashboard();
     if (hash === 'clientes') carregarClientes();
+  }
+
+  // ── SAIR ──
+  document.querySelectorAll('.nav-item[data-page="sair"]').forEach(btn => {
+    btn.addEventListener('click', function(){
+      if (confirm('Tem certeza que deseja sair?')) {
+        sessionStorage.removeItem('gestor_session');
+        // resetar state
+        state.revendedorId = null;
+        state.slug = '';
+        state.brandName = 'Minha Marca';
+        mostrarLogin();
+        showToast('Sessão encerrada.');
+      }
+    });
   });
+
+  // ── INIT ──
+  const sessaoSalva = sessionStorage.getItem('gestor_session');
+  if (sessaoSalva) {
+    try {
+      mostrarApp();
+      iniciarPainel();
+    } catch(e) {
+      sessionStorage.removeItem('gestor_session');
+      mostrarLogin();
+    }
+  } else {
+    mostrarLogin();
+  }
 
 })();
 </script>
